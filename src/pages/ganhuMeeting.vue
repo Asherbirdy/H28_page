@@ -3,7 +3,7 @@
 </route>
 
 <script setup lang='ts'>
-import { NSpace, NCard, NSpin, NEmpty, NButton, NTag, NTabs, NTabPane, NText } from 'naive-ui'
+import { NSpace, NCard, NSpin, NEmpty, NButton, NTag, NTabs, NTabPane, NText, NCheckbox, NCheckboxGroup } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -14,6 +14,10 @@ const error = ref<string | null>(null)
 
 // Tab 狀態
 const activeTab = ref('departure')
+
+// 區域過濾
+const selectedDistricts = ref<string[]>(['一區', '二區', '三區', '四區'])
+const allDistricts = ['一區', '二區', '三區', '四區']
 
 const loadParticipants = async () => {
 	loading.value = true
@@ -39,6 +43,13 @@ const getDistrictDisplay = (districtName: string) => {
 	return districtName.replace('區', '')
 }
 
+const getParticipantLabel = (participant: GanhuParticipant) => {
+	if (participant.identity.includes('兒童')) {
+		return `${participant.name} (兒)`
+	}
+	return participant.name
+}
+
 const sortByDistrict = (participantList: GanhuParticipant[]) => {
 	const districtOrder = ['一區', '二區', '三區', '四區']
 	return participantList.sort((a, b) => {
@@ -56,6 +67,7 @@ const groupByDistrictForDisplay = (participantList: GanhuParticipant[]) => {
 	const groups = []
 
 	for (const district of districtOrder) {
+		if (!selectedDistricts.value.includes(district)) continue
 		const districtParticipants = participantList.filter(p => p.districtName === district)
 		if (districtParticipants.length > 0) {
 			groups.push({
@@ -111,13 +123,17 @@ const getStatistics = computed(() => {
 	)
 
 	const totalParticipants = validParticipants.length
-	const children = validParticipants.filter(p => p.identity.includes('兒童')).length
+	const childrenUpper = validParticipants.filter(p => p.identity.includes('兒-國小上')).length
+	const childrenLower = validParticipants.filter(p => p.identity.includes('兒-國小下')).length
+	const children = childrenUpper + childrenLower
 	const adults = totalParticipants - children
 
 	return {
 		total: totalParticipants,
 		adults,
-		children
+		children,
+		childrenUpper,
+		childrenLower
 	}
 })
 
@@ -135,12 +151,26 @@ onMounted(() => {
     :size="16"
     class="p-6"
   >
-    <p>12/7 H28港湖集中主日報名</p>
 
+    <!-- 區域過濾 -->
+    <n-space align="center">
+      <span style="font-weight: 500;">
+        篩選區域:
+      </span>
+      <n-checkbox-group v-model:value="selectedDistricts">
+        <n-checkbox
+          v-for="district in allDistricts"
+          :key="district"
+          :value="district"
+          :label="district"
+        />
+      </n-checkbox-group>
+    </n-space>
+    <p>12/7 H28港湖集中主日報名</p>
     <!-- 統計時間 -->
-    <n-text depth="3" style="font-size: 14px;">
+    <!-- <n-text depth="3" style="font-size: 14px;">
       統計時間: {{ currentTime }}
-    </n-text>
+    </n-text> -->
 
     <!-- 統計資訊 -->
     <n-space v-if="!loading && !error">
@@ -180,7 +210,7 @@ onMounted(() => {
                         :key="participant.name"
                         :type="getDistrictColor(participant.districtName)"
                       >
-                        {{ participant.name }}
+                        {{ getParticipantLabel(participant) }}
                       </n-tag>
                     </n-space>
                   </div>
@@ -196,7 +226,7 @@ onMounted(() => {
                         :key="participant.name"
                         :type="getDistrictColor(participant.districtName)"
                       >
-                        {{ participant.name }}
+                        {{ getParticipantLabel(participant) }}
                       </n-tag>
                     </n-space>
                   </div>
@@ -217,7 +247,7 @@ onMounted(() => {
                         :key="participant.name"
                         :type="getDistrictColor(participant.districtName)"
                       >
-                        {{ participant.name }}
+                        {{ getParticipantLabel(participant) }}
                       </n-tag>
                     </n-space>
                   </div>
@@ -233,7 +263,7 @@ onMounted(() => {
                         :key="participant.name"
                         :type="getDistrictColor(participant.districtName)"
                       >
-                        {{ participant.name }}
+                        {{ getParticipantLabel(participant) }}
                       </n-tag>
                     </n-space>
                   </div>
@@ -249,7 +279,7 @@ onMounted(() => {
                         :key="participant.name"
                         :type="getDistrictColor(participant.districtName)"
                       >
-                        {{ participant.name }}
+                        {{ getParticipantLabel(participant) }}
                       </n-tag>
                     </n-space>
                   </div>
