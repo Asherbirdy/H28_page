@@ -135,7 +135,7 @@ onMounted(() => {
     :size="16"
     class="p-6"
   >
-    <p>12/7 H28港湖集中主日統計</p>
+    <p>12/7 H28港湖集中主日報名</p>
 
     <!-- 統計時間 -->
     <n-text depth="3" style="font-size: 14px;">
