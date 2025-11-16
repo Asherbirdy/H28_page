@@ -44,7 +44,7 @@ const getDistrictDisplay = (districtName: string) => {
 }
 
 const getParticipantLabel = (participant: GanhuParticipant) => {
-	if (participant.identity.includes('兒童')) {
+	if (participant.identity === '兒童(國小以上)' || participant.identity === '兒童(國小以下)') {
 		return `${participant.name} (兒)`
 	}
 	return participant.name
@@ -123,8 +123,8 @@ const getStatistics = computed(() => {
 	)
 
 	const totalParticipants = validParticipants.length
-	const childrenUpper = validParticipants.filter(p => p.identity.includes('兒-國小上')).length
-	const childrenLower = validParticipants.filter(p => p.identity.includes('兒-國小下')).length
+	const childrenUpper = validParticipants.filter(p => p.identity === '兒童(國小以上)').length
+	const childrenLower = validParticipants.filter(p => p.identity === '兒童(國小以下)').length
 	const children = childrenUpper + childrenLower
 	const adults = totalParticipants - children
 
@@ -201,7 +201,7 @@ onMounted(() => {
           <!-- 去程 Tab -->
           <n-tab-pane name="departure" tab="去程">
             <n-space vertical :size="16">
-              <n-card title="去程搭乘遊覽車">
+              <n-card title="搭遊覽車去信基大樓">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().bus" :key="group.district">
                     <n-space>
@@ -217,7 +217,7 @@ onMounted(() => {
                 </n-space>
               </n-card>
 
-              <n-card title="自行前往">
+              <n-card title="自行前往信基大樓">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().self" :key="group.district">
                     <n-space>
