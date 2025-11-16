@@ -19,6 +19,9 @@ const activeTab = ref('departure')
 const selectedDistricts = ref<string[]>(['一區', '二區', '三區', '四區'])
 const allDistricts = ['一區', '二區', '三區', '四區']
 
+// 統計資訊顯示開關
+const showDetailedStats = ref(true)
+
 const loadParticipants = async () => {
 	loading.value = true
 	error.value = null
@@ -173,10 +176,13 @@ onMounted(() => {
     </n-text> -->
 
     <!-- 統計資訊 -->
-    <n-space v-if="!loading && !error">
-      <n-text>參加: {{ getStatistics.adults }} 位</n-text>
-      <n-text>兒童: {{ getStatistics.children }} 位</n-text>
-      <n-text>總計: {{ getStatistics.total }} 位</n-text>
+    <n-space align="center">
+      <n-checkbox v-model:checked="showDetailedStats" label="統計資訊" />
+      <n-space v-if="showDetailedStats && !loading && !error">
+        <n-text>參加: {{ getStatistics.adults }} 位</n-text>
+        <n-text>兒童: {{ getStatistics.children }} 位</n-text>
+        <n-text>總計: {{ getStatistics.total }} 位</n-text>
+      </n-space>
     </n-space>
 
     <n-spin :show="loading">
