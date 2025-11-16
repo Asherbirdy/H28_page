@@ -28,13 +28,36 @@ const loadParticipants = async () => {
 	}
 }
 
+const getDistrictColor = (districtName: string) => {
+	const colors = ['success', 'info', 'warning', 'error']
+	const districts = ['一區', '二區', '三區', '四區']
+	const index = districts.indexOf(districtName)
+	return index !== -1 ? colors[index] : 'default'
+}
+
+const getDistrictDisplay = (districtName: string) => {
+	return districtName.replace('區', '')
+}
+
+const sortByDistrict = (participantList: GanhuParticipant[]) => {
+	const districtOrder = ['一區', '二區', '三區', '四區']
+	return participantList.sort((a, b) => {
+		const aIndex = districtOrder.indexOf(a.districtName)
+		const bIndex = districtOrder.indexOf(b.districtName)
+		if (aIndex !== bIndex) {
+			return aIndex - bIndex
+		}
+		return a.name.localeCompare(b.name)
+	})
+}
+
 const getDepartureGroups = () => {
 	const busParticipants = participants.value.filter(p => p.departure.includes('搭乘遊覽車'))
 	const selfParticipants = participants.value.filter(p => p.departure.includes('自行前往'))
 
 	return {
-		bus: busParticipants.sort((a, b) => a.name.localeCompare(b.name)),
-		self: selfParticipants.sort((a, b) => a.name.localeCompare(b.name))
+		bus: sortByDistrict(busParticipants),
+		self: sortByDistrict(selfParticipants)
 	}
 }
 
@@ -44,9 +67,9 @@ const getAfternoonGroups = () => {
 	const selfParticipants = participants.value.filter(p => p.returnRide.includes('參加相調(自行前往)'))
 
 	return {
-		bus: busParticipants.sort((a, b) => a.name.localeCompare(b.name)),
-		none: noneParticipants.sort((a, b) => a.name.localeCompare(b.name)),
-		self: selfParticipants.sort((a, b) => a.name.localeCompare(b.name))
+		bus: sortByDistrict(busParticipants),
+		none: sortByDistrict(noneParticipants),
+		self: sortByDistrict(selfParticipants)
 	}
 }
 
@@ -90,9 +113,9 @@ onMounted(() => {
                   <n-tag
                     v-for="participant in getDepartureGroups().bus"
                     :key="participant.name"
-                    type="primary"
+                    :type="getDistrictColor(participant.districtName)"
                   >
-                    {{ participant.name }}
+                    {{ participant.name }} ({{ getDistrictDisplay(participant.districtName) }})
                   </n-tag>
                 </n-space>
                 <template #footer>
@@ -107,9 +130,9 @@ onMounted(() => {
                   <n-tag
                     v-for="participant in getDepartureGroups().self"
                     :key="participant.name"
-                    type="warning"
+                    :type="getDistrictColor(participant.districtName)"
                   >
-                    {{ participant.name }}
+                    {{ participant.name }} ({{ getDistrictDisplay(participant.districtName) }})
                   </n-tag>
                 </n-space>
                 <template #footer>
@@ -129,9 +152,9 @@ onMounted(() => {
                   <n-tag
                     v-for="participant in getAfternoonGroups().bus"
                     :key="participant.name"
-                    type="primary"
+                    :type="getDistrictColor(participant.districtName)"
                   >
-                    {{ participant.name }}
+                    {{ participant.name }} ({{ getDistrictDisplay(participant.districtName) }})
                   </n-tag>
                 </n-space>
                 <template #footer>
@@ -146,9 +169,9 @@ onMounted(() => {
                   <n-tag
                     v-for="participant in getAfternoonGroups().none"
                     :key="participant.name"
-                    type="error"
+                    :type="getDistrictColor(participant.districtName)"
                   >
-                    {{ participant.name }}
+                    {{ participant.name }} ({{ getDistrictDisplay(participant.districtName) }})
                   </n-tag>
                 </n-space>
                 <template #footer>
@@ -163,9 +186,9 @@ onMounted(() => {
                   <n-tag
                     v-for="participant in getAfternoonGroups().self"
                     :key="participant.name"
-                    type="warning"
+                    :type="getDistrictColor(participant.districtName)"
                   >
-                    {{ participant.name }}
+                    {{ participant.name }} ({{ getDistrictDisplay(participant.districtName) }})
                   </n-tag>
                 </n-space>
                 <template #footer>
