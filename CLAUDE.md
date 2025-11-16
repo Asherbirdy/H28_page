@@ -78,3 +78,36 @@ The following are automatically available without imports:
 **TypeScript**: Path alias `@/` maps to `./src`. Type definitions extend `ImportMetaEnv` in `src/env.d.ts` for environment variables.
 
 **Naive UI**: Theme overrides applied in `src/theme.ts` for consistent branding.
+
+## 🚨 IMPORTANT DESIGN GUIDELINES
+
+**UI Framework Priority**: ALL pages MUST use Naive UI components as the primary design system. Avoid custom HTML elements and CSS classes where Naive UI components exist.
+
+**No Sidebar Navigation**: Do NOT implement or use sidebar navigation. Keep layout simple with main content area only.
+
+**Required Naive UI Components for Pages**:
+- `n-space` for layout spacing
+- `n-card` for content containers  
+- `n-data-table` for tabular data
+- `n-button`, `n-input`, `n-select` for form controls
+- `n-spin` for loading states
+- `n-empty` for empty/error states
+- `n-h1`, `n-h2`, `n-text` for typography
+- `n-statistic` for metrics display
+
+**Page Structure Template**:
+```vue
+<script setup lang='ts'>
+import { NSpace, NH1, NCard, NButton } from 'naive-ui'
+// Import other required Naive UI components
+</script>
+
+<template>
+  <n-space vertical :size="16" class="p-6">
+    <n-h1>Page Title</n-h1>
+    <!-- Page content with Naive UI components -->
+  </n-space>
+</template>
+```
+
+**🚨 CRITICAL**: Always explicitly import Naive UI components in each page file. Auto-import may not work consistently for all Naive UI components.

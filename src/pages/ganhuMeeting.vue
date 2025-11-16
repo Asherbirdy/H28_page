@@ -3,6 +3,8 @@
 </route>
 
 <script setup lang='ts'>
+import { NSpace, NH1, NCard, NDataTable, NSpin, NEmpty, NButton, NText, NStatistic } from 'naive-ui'
+
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
 
@@ -22,6 +24,14 @@ const loadParticipants = async () => {
 		loading.value = false
 	}
 }
+
+const tableColumns = [
+	{ title: '姓名', key: 'name' },
+	{ title: '身份', key: 'identity' },
+	{ title: '去程', key: 'departure' },
+	{ title: '回程', key: 'returnRide' },
+	{ title: '備註', key: 'notes' }
+]
 
 const getDistrictGroups = () => {
 	const districts = new Map<string, GanhuParticipant[]>()
@@ -45,84 +55,54 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">
-      港湖相調會議
-    </h1>
+  <n-space
+    vertical
+    :size="16"
+    class="p-6"
+  >
+    <n-h1>港湖相調會議</n-h1>
 
-    <div v-if="loading" class="text-center py-8">
-      <div>加載中...</div>
-    </div>
+    <n-spin :show="loading">
+      <n-empty v-if="error" description="載入失敗">
+        <template #extra>
+          <n-button @click="loadParticipants">
+            重新載入
+          </n-button>
+        </template>
+      </n-empty>
 
-    <div v-else-if="error" class="text-red-500 text-center py-8">
-      {{ error }}
-      <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded" @click="loadParticipants">
-        重新載入
-      </button>
-    </div>
-
-    <div v-else class="space-y-6">
-      <div
-        v-for="district in getDistrictGroups()"
-        :key="district.name"
-        class="bg-white rounded-lg shadow p-4"
+      <n-space
+        v-else
+        vertical
+        :size="16"
       >
-        <h2 class="text-xl font-semibold mb-4 text-blue-600">
-          {{ district.name }}
-        </h2>
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse">
-            <thead>
-              <tr class="bg-gray-50">
-                <th class="border p-2 text-left">
-                  姓名
-                </th>
-                <th class="border p-2 text-left">
-                  身份
-                </th>
-                <th class="border p-2 text-left">
-                  去程
-                </th>
-                <th class="border p-2 text-left">
-                  回程
-                </th>
-                <th class="border p-2 text-left">
-                  備註
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="participant in district.participants" :key="participant.name">
-                <td class="border p-2">
-                  {{ participant.name }}
-                </td>
-                <td class="border p-2">
-                  {{ participant.identity }}
-                </td>
-                <td class="border p-2">
-                  {{ participant.departure }}
-                </td>
-                <td class="border p-2">
-                  {{ participant.returnRide }}
-                </td>
-                <td class="border p-2">
-                  {{ participant.notes }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="mt-2 text-sm text-gray-600">
-          總計: {{ district.participants.length }} 人
-        </div>
-      </div>
+        <n-card
+          v-for="district in getDistrictGroups()"
+          :key="district.name"
+          :title="district.name"
+        >
+          <n-data-table
+            :columns="tableColumns"
+            :data="district.participants"
+            :pagination="false"
+            size="small"
+          />
 
-      <div class="bg-blue-50 p-4 rounded-lg">
-        <h3 class="font-semibold text-lg">
-          總統計
-        </h3>
-        <p>總參與人數: {{ participants.length }} 人</p>
-      </div>
-    </div>
-  </div>
+          <template #footer>
+            <n-text depth="3">
+              總計: {{ district.participants.length }} 人
+            </n-text>
+          </template>
+        </n-card>
+
+        <n-card title="總統計">
+          <n-statistic
+            label="總參與人數"
+            :value="participants.length"
+            suffix="人"
+          />
+        </n-card>
+      </n-space>
+    </n-spin>
+  </n-space>
 </template>
