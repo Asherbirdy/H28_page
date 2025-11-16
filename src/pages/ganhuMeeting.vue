@@ -3,7 +3,7 @@
 </route>
 
 <script setup lang='ts'>
-import { NSpace, NH1, NCard, NSpin, NEmpty, NButton, NText, NStatistic, NTag } from 'naive-ui'
+import { NSpace, NH1, NCard, NSpin, NEmpty, NButton, NText, NStatistic, NTag, NTabs, NTabPane } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -11,6 +11,9 @@ import type { GanhuParticipant } from '@/types/apis/ganhu'
 const participants = ref<GanhuParticipant[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+
+// Tab 狀態
+const activeTab = ref('departure')
 
 const loadParticipants = async () => {
 	loading.value = true
@@ -25,21 +28,26 @@ const loadParticipants = async () => {
 	}
 }
 
+const getDepartureGroups = () => {
+	const busParticipants = participants.value.filter(p => p.departure.includes('搭乘遊覽車'))
+	const selfParticipants = participants.value.filter(p => p.departure.includes('自行前往'))
 
-const getDistrictGroups = () => {
-	const districts = new Map<string, GanhuParticipant[]>()
+	return {
+		bus: busParticipants.sort((a, b) => a.name.localeCompare(b.name)),
+		self: selfParticipants.sort((a, b) => a.name.localeCompare(b.name))
+	}
+}
 
-	participants.value.forEach(participant => {
-		if (!districts.has(participant.districtName)) {
-			districts.set(participant.districtName, [])
-		}
-		districts.get(participant.districtName)!.push(participant)
-	})
+const getAfternoonGroups = () => {
+	const busParticipants = participants.value.filter(p => p.returnRide.includes('參加相調(搭遊覽車)'))
+	const noneParticipants = participants.value.filter(p => p.returnRide.includes('不參加相調(自行回程)'))
+	const selfParticipants = participants.value.filter(p => p.returnRide.includes('參加相調(自行前往)'))
 
-	return Array.from(districts.entries()).map(([name, participants]) => ({
-		name,
-		participants: participants.sort((a, b) => a.name.localeCompare(b.name))
-	})).sort((a, b) => a.name.localeCompare(b.name))
+	return {
+		bus: busParticipants.sort((a, b) => a.name.localeCompare(b.name)),
+		none: noneParticipants.sort((a, b) => a.name.localeCompare(b.name)),
+		self: selfParticipants.sort((a, b) => a.name.localeCompare(b.name))
+	}
 }
 
 onMounted(() => {
@@ -69,27 +77,106 @@ onMounted(() => {
         vertical
         :size="16"
       >
-        <n-card
-          v-for="district in getDistrictGroups()"
-          :key="district.name"
-          :title="district.name"
+        <n-tabs
+          v-model:value="activeTab"
+          type="line"
+          animated
         >
-          <n-space>
-            <n-tag
-              v-for="participant in district.participants"
-              :key="participant.name"
-              type="info"
-            >
-              {{ participant.name }}
-            </n-tag>
-          </n-space>
+          <!-- 去程 Tab -->
+          <n-tab-pane name="departure" tab="去程">
+            <n-space vertical :size="16">
+              <n-card title="去程搭乘遊覽車">
+                <n-space>
+                  <n-tag
+                    v-for="participant in getDepartureGroups().bus"
+                    :key="participant.name"
+                    type="primary"
+                  >
+                    {{ participant.name }}
+                  </n-tag>
+                </n-space>
+                <template #footer>
+                  <n-text depth="3">
+                    總計: {{ getDepartureGroups().bus.length }} 人
+                  </n-text>
+                </template>
+              </n-card>
 
-          <template #footer>
-            <n-text depth="3">
-              總計: {{ district.participants.length }} 人
-            </n-text>
-          </template>
-        </n-card>
+              <n-card title="自行前往">
+                <n-space>
+                  <n-tag
+                    v-for="participant in getDepartureGroups().self"
+                    :key="participant.name"
+                    type="warning"
+                  >
+                    {{ participant.name }}
+                  </n-tag>
+                </n-space>
+                <template #footer>
+                  <n-text depth="3">
+                    總計: {{ getDepartureGroups().self.length }} 人
+                  </n-text>
+                </template>
+              </n-card>
+            </n-space>
+          </n-tab-pane>
+
+          <!-- 下午程 Tab -->
+          <n-tab-pane name="afternoon" tab="下午程">
+            <n-space vertical :size="16">
+              <n-card title="參加相調(搭遊覽車)">
+                <n-space>
+                  <n-tag
+                    v-for="participant in getAfternoonGroups().bus"
+                    :key="participant.name"
+                    type="primary"
+                  >
+                    {{ participant.name }}
+                  </n-tag>
+                </n-space>
+                <template #footer>
+                  <n-text depth="3">
+                    總計: {{ getAfternoonGroups().bus.length }} 人
+                  </n-text>
+                </template>
+              </n-card>
+
+              <n-card title="不參加相調(自行回程)">
+                <n-space>
+                  <n-tag
+                    v-for="participant in getAfternoonGroups().none"
+                    :key="participant.name"
+                    type="error"
+                  >
+                    {{ participant.name }}
+                  </n-tag>
+                </n-space>
+                <template #footer>
+                  <n-text depth="3">
+                    總計: {{ getAfternoonGroups().none.length }} 人
+                  </n-text>
+                </template>
+              </n-card>
+
+              <n-card title="參加相調(自行前往)">
+                <n-space>
+                  <n-tag
+                    v-for="participant in getAfternoonGroups().self"
+                    :key="participant.name"
+                    type="warning"
+                  >
+                    {{ participant.name }}
+                  </n-tag>
+                </n-space>
+                <template #footer>
+                  <n-text depth="3">
+                    總計: {{ getAfternoonGroups().self.length }} 人
+                  </n-text>
+                </template>
+              </n-card>
+            </n-space>
+          </n-tab-pane>
+        </n-tabs>
 
         <n-card title="總統計">
           <n-statistic
