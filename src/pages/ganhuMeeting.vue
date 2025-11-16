@@ -3,7 +3,7 @@
 </route>
 
 <script setup lang='ts'>
-import { NSpace, NH1, NCard, NDataTable, NSpin, NEmpty, NButton, NText, NStatistic } from 'naive-ui'
+import { NSpace, NH1, NCard, NSpin, NEmpty, NButton, NText, NStatistic, NTag } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -25,13 +25,6 @@ const loadParticipants = async () => {
 	}
 }
 
-const tableColumns = [
-	{ title: '姓名', key: 'name' },
-	{ title: '身份', key: 'identity' },
-	{ title: '去程', key: 'departure' },
-	{ title: '回程', key: 'returnRide' },
-	{ title: '備註', key: 'notes' }
-]
 
 const getDistrictGroups = () => {
 	const districts = new Map<string, GanhuParticipant[]>()
@@ -81,12 +74,15 @@ onMounted(() => {
           :key="district.name"
           :title="district.name"
         >
-          <n-data-table
-            :columns="tableColumns"
-            :data="district.participants"
-            :pagination="false"
-            size="small"
-          />
+          <n-space>
+            <n-tag
+              v-for="participant in district.participants"
+              :key="participant.name"
+              type="info"
+            >
+              {{ participant.name }}
+            </n-tag>
+          </n-space>
 
           <template #footer>
             <n-text depth="3">
