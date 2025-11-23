@@ -35,8 +35,8 @@ const loadParticipants = async () => {
 	}
 }
 
-const getDistrictColor = (districtName: string) => {
-	const colors = ['success', 'info', 'warning', 'error']
+const getDistrictColor = (districtName: string): 'success' | 'info' | 'warning' | 'error' | 'default' => {
+	const colors: ('success' | 'info' | 'warning' | 'error')[] = ['success', 'info', 'warning', 'error']
 	const districts = ['一區', '二區', '三區', '四區']
 	const index = districts.indexOf(districtName)
 	return index !== -1 ? colors[index] : 'default'
