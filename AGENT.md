@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Architecture
+## Project Structure
 
 This is a Vue 3 + TypeScript application using Composition API with the following key technologies:
 
@@ -15,13 +15,84 @@ This is a Vue 3 + TypeScript application using Composition API with the followin
 
 ### Directory Structure
 
-- `src/components/` - Reusable components with auto-registration
-- `src/hook/apis/` - API functions and data fetching hooks
-- `src/types/apis/` - TypeScript interfaces for API responses
-- `src/stores/` - Pinia stores organized by feature
-- `src/pages/` - File-based routes with YAML frontmatter
-- `src/layouts/` - Layout components for page structure
-- `src/utils/` - Utility functions
+```
+/Users/asherlien/project/H28_page/
+├── .env.example
+├── .env.production.example
+├── .eslintrc.cjs
+├── .gitignore
+├── AGENT.md
+├── CLAUDE.md
+├── GEMINI.md
+├── index.html
+├── package.json
+├── pnpm-lock.yaml
+├── README.md
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── uno.config.ts
+├── vite.config.mts
+├── .claude/
+│   └── settings.local.json
+├── .git/...
+├── node_modules/...
+├── public/
+│   └── favicon.ico
+└── src/
+    ├── *.d.ts
+    ├── App.vue
+    ├── auto-components.ts
+    ├── auto-imports.ts
+    ├── config.ts
+    ├── env.d.ts
+    ├── main.ts
+    ├── theme.ts
+    ├── assets/
+    │   └── scss/
+    │       ├── global.scss
+    │       └── transition.scss
+    ├── components/
+    │   ├── index.ts
+    │   └── Layouts/
+    │       ├── LayoutsHeader.vue
+    │       └── LayoutSidebar.vue
+    ├── composable/
+    │   └── .gitkeep
+    ├── enum/
+    │   ├── app/
+    │   │   └── .gitkeep
+    │   └── common/
+    │       └── .gitkeep
+    ├── hook/
+    │   ├── .gitkeep
+    │   └── apis/
+    │       ├── .gitkeep
+    │       └── ganhu.ts
+    ├── layouts/
+    │   └── default.vue
+    ├── pages/
+    │   ├── [...all].vue
+    │   ├── ganhuMeeting.vue
+    │   └── index.vue
+    ├── router/
+    │   └── index.ts
+    ├── stores/
+    │   ├── index.ts
+    │   └── apps/
+    │       └── productStore.ts
+    ├── types/
+    │   ├── apis/
+    │   │   ├── .gitkeep
+    │   │   └── ganhu.ts
+    │   ├── apps/
+    │   │   └── .gitkeep
+    │   └── common/
+    │       └── .gitkeep
+    └── utils/
+        ├── cookie.ts
+        └── index.ts
+```
 
 ### Code Patterns
 
