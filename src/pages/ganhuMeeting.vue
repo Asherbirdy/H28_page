@@ -88,7 +88,7 @@ const getDepartureGroups = () => {
 	const selfParticipants = participants.value.filter(p => p.departure.includes('自行前往'))
 	// Handle both potential spellings to be safe, or just the requested one. 
     // User specifically asked for "不客前往".
-	const noneParticipants = participants.value.filter(p => p.departure.includes('不客前往') || p.departure.includes('不克前往'))
+	const noneParticipants = participants.value.filter(p => p.departure.includes('不克前往') || p.departure.includes('不克前往'))
 
 	return {
 		bus: groupByDistrictForDisplay(busParticipants),
@@ -130,7 +130,7 @@ const getStatistics = computed(() => {
 		!p.departure.includes('未選擇') && 
 		!p.returnRide.includes('未選擇') &&
 		!p.departure.includes('不克前往') &&
-        !p.departure.includes('不客前往')
+        !p.departure.includes('不克前往')
 	)
 
 	const totalParticipants = validParticipants.length
@@ -247,7 +247,7 @@ onMounted(() => {
                 </n-space>
               </n-card>
 
-              <n-card title="不客前往">
+              <n-card title="不克前往">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().none" :key="group.district">
                     <n-space>
