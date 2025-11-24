@@ -86,10 +86,14 @@ const groupByDistrictForDisplay = (participantList: GanhuParticipant[]) => {
 const getDepartureGroups = () => {
 	const busParticipants = participants.value.filter(p => p.departure.includes('搭乘遊覽車'))
 	const selfParticipants = participants.value.filter(p => p.departure.includes('自行前往'))
+	// Handle both potential spellings to be safe, or just the requested one. 
+    // User specifically asked for "不客前往".
+	const noneParticipants = participants.value.filter(p => p.departure.includes('不客前往') || p.departure.includes('不克前往'))
 
 	return {
 		bus: groupByDistrictForDisplay(busParticipants),
-		self: groupByDistrictForDisplay(selfParticipants)
+		self: groupByDistrictForDisplay(selfParticipants),
+		none: groupByDistrictForDisplay(noneParticipants)
 	}
 }
 
@@ -121,8 +125,12 @@ const updateCurrentTime = () => {
 
 const getStatistics = computed(() => {
 	// 過濾掉去程或下午程為"未選擇"的參與者
+	// 也要過濾掉去程為"不克前往"或"不客前往"的參與者
 	const validParticipants = participants.value.filter(p =>
-		!p.departure.includes('未選擇') && !p.returnRide.includes('未選擇')
+		!p.departure.includes('未選擇') && 
+		!p.returnRide.includes('未選擇') &&
+		!p.departure.includes('不克前往') &&
+        !p.departure.includes('不客前往')
 	)
 
 	const totalParticipants = validParticipants.length
@@ -226,6 +234,22 @@ onMounted(() => {
               <n-card title="自行前往信基大樓">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().self" :key="group.district">
+                    <n-space>
+                      <n-tag
+                        v-for="participant in group.participants"
+                        :key="participant.name"
+                        :type="getDistrictColor(participant.districtName)"
+                      >
+                        {{ getParticipantLabel(participant) }}
+                      </n-tag>
+                    </n-space>
+                  </div>
+                </n-space>
+              </n-card>
+
+              <n-card title="不客前往">
+                <n-space vertical :size="8">
+                  <div v-for="group in getDepartureGroups().none" :key="group.district">
                     <n-space>
                       <n-tag
                         v-for="participant in group.participants"
