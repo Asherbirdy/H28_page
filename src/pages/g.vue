@@ -253,6 +253,9 @@ onMounted(() => {
           <n-tab-pane name="departure" tab="去程">
             <n-space vertical :size="16">
               <n-card :title="`搭遊覽車去信基大樓 (${getCategoryCount(getDepartureGroups().bus)}人)`">
+                <n-text depth="3" style="margin-top: 8px;">
+                  兩台遊覽車80人還可以坐 {{ 80 - getCategoryCount(getDepartureGroups().bus) }} 人
+                </n-text>
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().bus" :key="group.district">
                     <n-space>
@@ -393,7 +396,7 @@ onMounted(() => {
                 <div>—</div>
 
                 <n-text>
-                  搭遊覽車去信基大樓 ({{ getCategoryCount(getDepartureGroups().bus) }}人) 兩台遊覽車80人還可以坐 {{ 80 - getCategoryCount(getDepartureGroups().bus) }} 人
+                  搭遊覽車去信基大樓
                 </n-text>
                 <n-text>
                   自行前往信基大樓 ({{ getCategoryCount(getDepartureGroups().self) }}人)
