@@ -139,12 +139,20 @@ const getStatistics = computed(() => {
 	const children = childrenUpper + childrenLower
 	const adults = totalParticipants - children
 
+	// 統計福新朋友、男介、女介 - 取得名字列表
+	const fuxinFriendsList = validParticipants.filter(p => p.identity.includes('福新朋友') || p.identity.includes('福音朋友')).map(p => p.name)
+	const maleIntroList = validParticipants.filter(p => p.identity.includes('男介')).map(p => p.name)
+	const femaleIntroList = validParticipants.filter(p => p.identity.includes('女介')).map(p => p.name)
+
 	return {
 		total: totalParticipants,
 		adults,
 		children,
 		childrenUpper,
-		childrenLower
+		childrenLower,
+		fuxinFriendsList,
+		maleIntroList,
+		femaleIntroList
 	}
 })
 
@@ -152,6 +160,30 @@ const getStatistics = computed(() => {
 const getCategoryCount = (groups: { district: string, participants: GanhuParticipant[] }[]) => {
 	return groups.reduce((total, group) => total + group.participants.length, 0)
 }
+
+// 計算各區人數
+const getDistrictStatistics = computed(() => {
+	// 過濾掉去程為"未選擇"或"不克前往"的參與者
+	const validParticipants = participants.value.filter(p =>
+		!p.departure.includes('未選擇') &&
+		!p.returnRide.includes('未選擇') &&
+		!p.departure.includes('不克前往') &&
+		!p.departure.includes('不克前往')
+	)
+
+	const districts = ['一區', '二區', '三區', '四區']
+	return districts.map(district => {
+		const districtParticipants = validParticipants.filter(p => p.districtName === district)
+		const children = districtParticipants.filter(p =>
+			p.identity === '兒童(國小以上)' || p.identity === '兒童(國小以下)'
+		).length
+		return {
+			name: district,
+			count: districtParticipants.length,
+			children
+		}
+	})
+})
 
 onMounted(() => {
 	loadParticipants()
@@ -321,6 +353,59 @@ onMounted(() => {
                 </n-space>
               </n-card>
             </n-space>
+          </n-tab-pane>
+
+          <!-- 資訊 Tab -->
+          <n-tab-pane name="info" tab="資訊">
+            <n-card title="12/7 H28港湖集中主日報名統計資訊">
+              <n-space vertical :size="12">
+                <n-text>
+                  參加: {{ getStatistics.adults }} 位
+                </n-text>
+                <n-text>
+                  國小以上兒童：{{ getStatistics.childrenUpper }} 位
+                </n-text>
+                <n-text>
+                  國小以下兒童：{{ getStatistics.childrenLower }} 位
+                </n-text>
+                <n-text style="font-size: 16px; font-weight: 500;">
+                  總計: {{ getStatistics.total }} 位
+                </n-text>
+
+                <div>—</div>
+
+                <div v-for="district in getDistrictStatistics" :key="district.name">
+                  <n-text>{{ district.name }}：{{ district.count }} 位 (包含 {{ district.children }} 位兒童)</n-text>
+                </div>
+
+                <div>—</div>
+
+                <n-text>
+                  福音朋友
+                </n-text>
+                <n-text>
+                  男介：{{ getStatistics.maleIntroList.length > 0 ? getStatistics.maleIntroList.join('、') : '無' }}
+                </n-text>
+                <n-text>
+                  女介：{{ getStatistics.femaleIntroList.length > 0 ? getStatistics.femaleIntroList.join('、') : '無' }}
+                </n-text>
+
+                <div>—</div>
+
+                <n-text>
+                  搭遊覽車去信基大樓 ({{ getCategoryCount(getDepartureGroups().bus) }}人) 兩台遊覽車80人還可以坐 {{ 80 - getCategoryCount(getDepartureGroups().bus) }} 人
+                </n-text>
+                <n-text>
+                  自行前往信基大樓 ({{ getCategoryCount(getDepartureGroups().self) }}人)
+                </n-text>
+                <n-text>
+                  參加相調(搭遊覽車) ({{ getCategoryCount(getAfternoonGroups().bus) }}人)
+                </n-text>
+                <n-text>
+                  參加相調(自行前往) ({{ getCategoryCount(getAfternoonGroups().self) }}人)
+                </n-text>
+              </n-space>
+            </n-card>
           </n-tab-pane>
         </n-tabs>
 
