@@ -86,8 +86,8 @@ const groupByDistrictForDisplay = (participantList: GanhuParticipant[]) => {
 const getDepartureGroups = () => {
 	const busParticipants = participants.value.filter(p => p.departure.includes('搭乘遊覽車'))
 	const selfParticipants = participants.value.filter(p => p.departure.includes('自行前往'))
-	// Handle both potential spellings to be safe, or just the requested one. 
-    // User specifically asked for "不客前往".
+	// Handle both potential spellings to be safe, or just the requested one.
+	// User specifically asked for "不客前往".
 	const noneParticipants = participants.value.filter(p => p.departure.includes('不克前往') || p.departure.includes('不克前往'))
 
 	return {
@@ -127,10 +127,10 @@ const getStatistics = computed(() => {
 	// 過濾掉去程或下午程為"未選擇"的參與者
 	// 也要過濾掉去程為"不克前往"或"不客前往"的參與者
 	const validParticipants = participants.value.filter(p =>
-		!p.departure.includes('未選擇') && 
+		!p.departure.includes('未選擇') &&
 		!p.returnRide.includes('未選擇') &&
 		!p.departure.includes('不克前往') &&
-        !p.departure.includes('不克前往')
+		!p.departure.includes('不克前往')
 	)
 
 	const totalParticipants = validParticipants.length
@@ -147,6 +147,11 @@ const getStatistics = computed(() => {
 		childrenLower
 	}
 })
+
+// 計算每個分類的人數
+const getCategoryCount = (groups: { district: string, participants: GanhuParticipant[] }[]) => {
+	return groups.reduce((total, group) => total + group.participants.length, 0)
+}
 
 onMounted(() => {
 	loadParticipants()
@@ -215,7 +220,7 @@ onMounted(() => {
           <!-- 去程 Tab -->
           <n-tab-pane name="departure" tab="去程">
             <n-space vertical :size="16">
-              <n-card title="搭遊覽車去信基大樓">
+              <n-card :title="`搭遊覽車去信基大樓 (${getCategoryCount(getDepartureGroups().bus)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().bus" :key="group.district">
                     <n-space>
@@ -231,7 +236,7 @@ onMounted(() => {
                 </n-space>
               </n-card>
 
-              <n-card title="自行前往信基大樓">
+              <n-card :title="`自行前往信基大樓 (${getCategoryCount(getDepartureGroups().self)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().self" :key="group.district">
                     <n-space>
@@ -247,7 +252,7 @@ onMounted(() => {
                 </n-space>
               </n-card>
 
-              <n-card title="不克前往">
+              <n-card :title="`不克前往 (${getCategoryCount(getDepartureGroups().none)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().none" :key="group.district">
                     <n-space>
@@ -268,7 +273,7 @@ onMounted(() => {
           <!-- 下午程 Tab -->
           <n-tab-pane name="afternoon" tab="下午程">
             <n-space vertical :size="16">
-              <n-card title="參加相調(搭遊覽車)">
+              <n-card :title="`參加相調(搭遊覽車) (${getCategoryCount(getAfternoonGroups().bus)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getAfternoonGroups().bus" :key="group.district">
                     <n-space>
@@ -284,7 +289,7 @@ onMounted(() => {
                 </n-space>
               </n-card>
 
-              <n-card title="參加相調(自行前往)">
+              <n-card :title="`參加相調(自行前往) (${getCategoryCount(getAfternoonGroups().self)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getAfternoonGroups().self" :key="group.district">
                     <n-space>
@@ -300,7 +305,7 @@ onMounted(() => {
                 </n-space>
               </n-card>
 
-              <n-card title="不參加相調(自行回程)">
+              <n-card :title="`不參加相調(自行回程) (${getCategoryCount(getAfternoonGroups().none)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getAfternoonGroups().none" :key="group.district">
                     <n-space>
