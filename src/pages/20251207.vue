@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { NSpace, NCard, NText, NSpin, NEmpty, NH2 } from 'naive-ui'
+import { NSpace, NCard, NText, NSpin, NEmpty, NH2, NBackTop } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -187,15 +187,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-space
-    vertical
-    :size="32"
-  >
-    <!-- 去程車次 -->
-    <div>
-      <n-space justify="center">
-        <n-h2>搭遊覽車[東湖->信基]</n-h2>
-      </n-space>
+  <div>
+    <n-space
+      vertical
+      :size="32"
+    >
+      <!-- 去程車次 -->
+      <div>
+        <n-space justify="center">
+          <n-h2>搭遊覽車[東湖->信基]</n-h2>
+        </n-space>
 
       <n-spin :show="loading">
         <template v-if="errorMessage && !loading">
@@ -334,7 +335,11 @@ onMounted(() => {
         </n-space>
       </n-spin>
     </div>
-  </n-space>
+    </n-space>
+
+    <!-- 返回頂部按鈕 -->
+    <n-back-top :right="40" :bottom="80" />
+  </div>
 </template>
 
 <style scoped>
