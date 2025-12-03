@@ -7,24 +7,24 @@ import type { Component } from 'vue'
 const router = useRouter()
 
 const renderIcon = (icon: Component) => {
-  return () => h(NIcon, null, { default: () => h(icon) })
+	return () => h(NIcon, null, { default: () => h(icon) })
 }
 
 const inverted = ref(false)
 
 const menuOptions: MenuOption[] = [
-  {
-    label: 'First Page',
-    key: 'first-page',
-    icon: renderIcon(BookOutline),
-    onClick: () => router.push('/')
-  },
-  {
-    label: 'Second Page',
-    key: 'second page',
-    icon: renderIcon(BookOutline),
-    onClick: () => router.push('/second')
-  }
+	{
+		label: 'First Page',
+		key: 'first-page',
+		icon: renderIcon(BookOutline),
+		onClick: () => router.push('/')
+	},
+	{
+		label: 'Second Page',
+		key: 'second page',
+		icon: renderIcon(BookOutline),
+		onClick: () => router.push('/second')
+	}
 ]
 
 </script>
