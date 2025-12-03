@@ -194,7 +194,7 @@ onMounted(() => {
     <!-- 去程車次 -->
     <div>
       <n-space justify="center">
-        <n-h2>搭遊覽[東湖->信基]</n-h2>
+        <n-h2>搭遊覽車[東湖->信基]</n-h2>
       </n-space>
 
       <n-spin :show="loading">
