@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { NSpace, NCard, NText, NSpin, NEmpty, NH1 } from 'naive-ui'
+import { NSpace, NCard, NText, NSpin, NEmpty, NH2 } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -194,7 +194,7 @@ onMounted(() => {
     <!-- 去程車次 -->
     <div>
       <n-space justify="center">
-        <n-h1>去信基大樓</n-h1>
+        <n-h2>搭遊覽[東湖->信基]</n-h2>
       </n-space>
 
       <n-spin :show="loading">
@@ -242,7 +242,7 @@ onMounted(() => {
     <!-- 回程相調車次 -->
     <div>
       <n-space justify="center">
-        <n-h1>去相調</n-h1>
+        <n-h2>搭遊覽車[信基->餐廳]</n-h2>
       </n-space>
 
       <n-spin :show="loading">
