@@ -1,0 +1,1 @@
+import{d as n,c as o,a as e,w as a,u as r,o as t,T as c,b as l,r as u,R as f}from"./index-CxKquRRW.js";const p=n({__name:"default",setup(_){return(d,i)=>(t(),o("div",null,[e(r(f),{class:"w-full"},{default:a(({Component:s})=>[e(c,{name:"pagefade"},{default:a(()=>[(t(),l(u(s)))]),_:2},1024)]),_:1})]))}});export{p as default};
