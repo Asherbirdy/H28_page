@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { NSpace, NCard, NText, NSpin, NEmpty } from 'naive-ui'
+import { NSpace, NCard, NText, NSpin, NEmpty, NH1 } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -29,6 +29,41 @@ const busGroups = computed(() => {
 				groups.set(p.busGo, [])
 			}
 			groups.get(p.busGo)!.push(p)
+		}
+	})
+
+	// 轉換為陣列並排序
+	const result: BusGroup[] = Array.from(groups.entries())
+		.map(([busName, participants]) => ({
+			busName,
+			participants
+		}))
+		.sort((a, b) => {
+			// 按照車次排序：一車、二車、三車...
+			const aNum = a.busName.match(/(\d+)/)?.[0] || '0'
+			const bNum = b.busName.match(/(\d+)/)?.[0] || '0'
+			return parseInt(aNum) - parseInt(bNum)
+		})
+
+	return result
+})
+
+const busBlendGroups = computed(() => {
+	// 確保 participants 是陣列
+	if (!Array.isArray(participants.value)) {
+		console.error('participants 不是陣列:', participants.value)
+		return []
+	}
+
+	const groups = new Map<string, GanhuParticipant[]>()
+
+	participants.value.forEach(p => {
+		// 過濾掉 "無需搭車" 和 "無"
+		if (p.busBlend && p.busBlend !== '無需搭車' && p.busBlend !== '無') {
+			if (!groups.has(p.busBlend)) {
+				groups.set(p.busBlend, [])
+			}
+			groups.get(p.busBlend)!.push(p)
 		}
 	})
 
@@ -87,35 +122,75 @@ onMounted(() => {
 <template>
   <n-space
     vertical
+    :size="32"
   >
-    <n-h3>去程車次名單</n-h3>
-
-    <n-spin :show="loading">
-      <template v-if="errorMessage && !loading">
-        <n-empty :description="errorMessage" />
-      </template>
-
-      <template v-else-if="busGroups.length === 0 && !loading">
-        <n-empty description="暫無數據" />
-      </template>
-
-      <n-space
-        v-else
-        vertical
-        :size="16"
-      >
-        <n-card
-          v-for="group in busGroups"
-          :key="group.busName"
-          :title="group.busName"
-          size="large"
-        >
-          <n-text>
-            {{ group.participants.map(p => p.name).join('、') }}
-          </n-text>
-        </n-card>
+    <!-- 去程車次 -->
+    <div>
+      <n-space justify="center">
+        <n-h1>去信基大樓</n-h1>
       </n-space>
-    </n-spin>
+
+      <n-spin :show="loading">
+        <template v-if="errorMessage && !loading">
+          <n-empty :description="errorMessage" />
+        </template>
+
+        <template v-else-if="busGroups.length === 0 && !loading">
+          <n-empty description="暫無數據" />
+        </template>
+
+        <n-space
+          v-else
+          vertical
+          :size="16"
+        >
+          <n-card
+            v-for="group in busGroups"
+            :key="group.busName"
+            :title="`${group.busName} (${group.participants.length}人)`"
+            size="large"
+          >
+            <n-text>
+              {{ group.participants.map(p => p.name).join('、') }}
+            </n-text>
+          </n-card>
+        </n-space>
+      </n-spin>
+    </div>
+
+    <!-- 回程相調車次 -->
+    <div>
+      <n-space justify="center">
+        <n-h1>去相調</n-h1>
+      </n-space>
+
+      <n-spin :show="loading">
+        <template v-if="errorMessage && !loading">
+          <n-empty :description="errorMessage" />
+        </template>
+
+        <template v-else-if="busBlendGroups.length === 0 && !loading">
+          <n-empty description="暫無數據" />
+        </template>
+
+        <n-space
+          v-else
+          vertical
+          :size="16"
+        >
+          <n-card
+            v-for="group in busBlendGroups"
+            :key="group.busName"
+            :title="`${group.busName} (${group.participants.length}人)`"
+            size="large"
+          >
+            <n-text>
+              {{ group.participants.map(p => p.name).join('、') }}
+            </n-text>
+          </n-card>
+        </n-space>
+      </n-spin>
+    </div>
   </n-space>
 </template>
 
