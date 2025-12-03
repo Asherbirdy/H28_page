@@ -140,6 +140,16 @@ const totalDiningCount = computed(() => {
 	return tableGroups.value.reduce((total, group) => total + group.participants.length, 0)
 })
 
+const getParticipantCounts = (participants: GanhuParticipant[]) => {
+	const childCount = participants.filter(p =>
+		p.identity === '兒童(國小以上)' ||
+		p.identity === '兒童(國小以下)' ||
+		p.identity === '0-3歲'
+	).length
+	const adultCount = participants.length - childCount
+	return { adultCount, childCount }
+}
+
 const loadData = async () => {
 	loading.value = true
 	errorMessage.value = ''
@@ -204,7 +214,7 @@ onMounted(() => {
           <n-card
             v-for="group in busGroups"
             :key="group.busName"
-            :title="`${group.busName} (${group.participants.length}人)`"
+            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}大人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
             size="large"
           >
             <n-text>
@@ -252,7 +262,7 @@ onMounted(() => {
           <n-card
             v-for="group in busBlendGroups"
             :key="group.busName"
-            :title="`${group.busName} (${group.participants.length}人)`"
+            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}大人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
             size="large"
           >
             <n-text>
@@ -300,7 +310,7 @@ onMounted(() => {
           <n-card
             v-for="group in tableGroups"
             :key="group.busName"
-            :title="`${group.busName} (${group.participants.length}人)`"
+            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}大人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
             size="large"
           >
             <n-text>
