@@ -83,6 +83,45 @@ const busBlendGroups = computed(() => {
 	return result
 })
 
+const tableGroups = computed(() => {
+	// 確保 participants 是陣列
+	if (!Array.isArray(participants.value)) {
+		console.error('participants 不是陣列:', participants.value)
+		return []
+	}
+
+	const groups = new Map<string, GanhuParticipant[]>()
+
+	participants.value.forEach(p => {
+		// 過濾掉 "無"、"無用餐" 或空值
+		if (p.table && p.table !== '無' && p.table !== '無用餐') {
+			if (!groups.has(p.table)) {
+				groups.set(p.table, [])
+			}
+			groups.get(p.table)!.push(p)
+		}
+	})
+
+	// 轉換為陣列並排序
+	const result: BusGroup[] = Array.from(groups.entries())
+		.map(([busName, participants]) => ({
+			busName,
+			participants
+		}))
+		.sort((a, b) => {
+			// 按照桌次排序：一桌、二桌、三桌...
+			const aNum = a.busName.match(/(\d+)/)?.[0] || '0'
+			const bNum = b.busName.match(/(\d+)/)?.[0] || '0'
+			return parseInt(aNum) - parseInt(bNum)
+		})
+
+	return result
+})
+
+const totalDiningCount = computed(() => {
+	return tableGroups.value.reduce((total, group) => total + group.participants.length, 0)
+})
+
 const loadData = async () => {
 	loading.value = true
 	errorMessage.value = ''
@@ -180,6 +219,40 @@ onMounted(() => {
         >
           <n-card
             v-for="group in busBlendGroups"
+            :key="group.busName"
+            :title="`${group.busName} (${group.participants.length}人)`"
+            size="large"
+          >
+            <n-text>
+              {{ group.participants.map(p => p.name).join('、') }}
+            </n-text>
+          </n-card>
+        </n-space>
+      </n-spin>
+    </div>
+
+    <!-- 桌次名單 -->
+    <div>
+      <n-space justify="center">
+        <n-h1>桌次名單 ({{ totalDiningCount }}人用餐)</n-h1>
+      </n-space>
+
+      <n-spin :show="loading">
+        <template v-if="errorMessage && !loading">
+          <n-empty :description="errorMessage" />
+        </template>
+
+        <template v-else-if="tableGroups.length === 0 && !loading">
+          <n-empty description="暫無數據" />
+        </template>
+
+        <n-space
+          v-else
+          vertical
+          :size="16"
+        >
+          <n-card
+            v-for="group in tableGroups"
             :key="group.busName"
             :title="`${group.busName} (${group.participants.length}人)`"
             size="large"
