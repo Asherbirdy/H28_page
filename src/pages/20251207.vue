@@ -102,6 +102,24 @@ const tableGroups = computed(() => {
 		}
 	})
 
+	// 中文數字映射
+	const chineseNumMap: Record<string, number> = {
+		'一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10
+	}
+
+	// 提取數字的函數
+	const extractNumber = (str: string): number => {
+		// 先嘗試匹配中文數字
+		for (const [chinese, num] of Object.entries(chineseNumMap)) {
+			if (str.includes(chinese)) {
+				return num
+			}
+		}
+		// 如果沒有中文數字，嘗試匹配阿拉伯數字
+		const match = str.match(/(\d+)/)
+		return match ? parseInt(match[0]) : 0
+	}
+
 	// 轉換為陣列並排序
 	const result: BusGroup[] = Array.from(groups.entries())
 		.map(([busName, participants]) => ({
@@ -110,9 +128,9 @@ const tableGroups = computed(() => {
 		}))
 		.sort((a, b) => {
 			// 按照桌次排序：一桌、二桌、三桌...
-			const aNum = a.busName.match(/(\d+)/)?.[0] || '0'
-			const bNum = b.busName.match(/(\d+)/)?.[0] || '0'
-			return parseInt(aNum) - parseInt(bNum)
+			const aNum = extractNumber(a.busName)
+			const bNum = extractNumber(b.busName)
+			return aNum - bNum
 		})
 
 	return result
