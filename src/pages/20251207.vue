@@ -208,7 +208,21 @@ onMounted(() => {
             size="large"
           >
             <n-text>
-              {{ group.participants.map(p => p.name).join('、') }}
+              <template
+                v-for="(participant, index) in group.participants"
+                :key="participant.name"
+              >
+                <span
+                  :class="{
+                    'highlight-child': participant.identity === '兒童(國小以上)'
+                      || participant.identity === '兒童(國小以下)'
+                      || participant.identity === '0-3歲'
+                  }"
+                >{{ participant.name }}</span>
+                <span v-if="index < group.participants.length - 1">
+                  、
+                </span>
+              </template>
             </n-text>
           </n-card>
         </n-space>
@@ -242,7 +256,21 @@ onMounted(() => {
             size="large"
           >
             <n-text>
-              {{ group.participants.map(p => p.name).join('、') }}
+              <template
+                v-for="(participant, index) in group.participants"
+                :key="participant.name"
+              >
+                <span
+                  :class="{
+                    'highlight-child': participant.identity === '兒童(國小以上)'
+                      || participant.identity === '兒童(國小以下)'
+                      || participant.identity === '0-3歲'
+                  }"
+                >{{ participant.name }}</span>
+                <span v-if="index < group.participants.length - 1">
+                  、
+                </span>
+              </template>
             </n-text>
           </n-card>
         </n-space>
@@ -276,7 +304,21 @@ onMounted(() => {
             size="large"
           >
             <n-text>
-              {{ group.participants.map(p => p.name).join('、') }}
+              <template
+                v-for="(participant, index) in group.participants"
+                :key="participant.name"
+              >
+                <span
+                  :class="{
+                    'highlight-child': participant.identity === '兒童(國小以上)'
+                      || participant.identity === '兒童(國小以下)'
+                      || participant.identity === '0-3歲'
+                  }"
+                >{{ participant.name }}</span>
+                <span v-if="index < group.participants.length - 1">
+                  、
+                </span>
+              </template>
             </n-text>
           </n-card>
         </n-space>
@@ -286,4 +328,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.highlight-child {
+  background-color: #90EE90;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: green
+}
 </style>
