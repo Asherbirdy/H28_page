@@ -215,7 +215,7 @@ onMounted(() => {
           <n-card
             v-for="group in busGroups"
             :key="group.busName"
-            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}大人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
+            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
             size="large"
           >
             <n-text>
@@ -263,7 +263,7 @@ onMounted(() => {
           <n-card
             v-for="group in busBlendGroups"
             :key="group.busName"
-            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}大人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
+            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
             size="large"
           >
             <n-text>
@@ -311,7 +311,7 @@ onMounted(() => {
           <n-card
             v-for="group in tableGroups"
             :key="group.busName"
-            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}大人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
+            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
             size="large"
           >
             <n-text>
