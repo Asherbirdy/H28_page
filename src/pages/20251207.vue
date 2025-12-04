@@ -155,6 +155,12 @@ const getParticipantCounts = (participants: GanhuParticipant[]) => {
 	}
 }
 
+const getBusLeader = (busName: string) => {
+	if (busName.includes('一車')) return '車長：劍弘、人溢'
+	if (busName.includes('二車')) return '車長：耀哲、仰恩'
+	return ''
+}
+
 const loadData = async () => {
 	loading.value = true
 	errorMessage.value = ''
@@ -220,9 +226,17 @@ onMounted(() => {
             <n-card
               v-for="group in busGroups"
               :key="group.busName"
-              :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
               size="large"
             >
+              <template #header>
+                <div class="bus-header">
+                  <span>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</span>
+                  <span
+                    v-if="getBusLeader(group.busName)"
+                    class="bus-leader"
+                  >{{ getBusLeader(group.busName) }}</span>
+                </div>
+              </template>
               <n-text>
                 <template
                   v-for="(participant, index) in group.participants"
@@ -268,9 +282,17 @@ onMounted(() => {
             <n-card
               v-for="group in busBlendGroups"
               :key="group.busName"
-              :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
               size="large"
             >
+              <template #header>
+                <div class="bus-header">
+                  <span>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</span>
+                  <span
+                    v-if="getBusLeader(group.busName)"
+                    class="bus-leader"
+                  >{{ getBusLeader(group.busName) }}</span>
+                </div>
+              </template>
               <n-text>
                 <template
                   v-for="(participant, index) in group.participants"
@@ -370,6 +392,19 @@ onMounted(() => {
   font-size: 0.75rem;
   color: #666;
   margin-top: 4px;
+  font-weight: normal;
+}
+
+.bus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.bus-leader {
+  font-size: 0.9rem;
+  color: #666;
   font-weight: normal;
 }
 </style>
