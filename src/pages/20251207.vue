@@ -141,13 +141,18 @@ const totalDiningCount = computed(() => {
 })
 
 const getParticipantCounts = (participants: GanhuParticipant[]) => {
-	const childCount = participants.filter(p =>
-		p.identity === '兒童(國小以上)' ||
-		p.identity === '兒童(國小以下)' ||
-		p.identity === '0-3歲'
-	).length
+	const elementaryAbove = participants.filter(p => p.identity === '兒童(國小以上)').length
+	const elementaryBelow = participants.filter(p => p.identity === '兒童(國小以下)').length
+	const preschool = participants.filter(p => p.identity === '0-3歲').length
+	const childCount = elementaryAbove + elementaryBelow + preschool
 	const adultCount = participants.length - childCount
-	return { adultCount, childCount }
+	return {
+		adultCount,
+		childCount,
+		elementaryAbove,
+		elementaryBelow,
+		preschool
+	}
 }
 
 const loadData = async () => {
@@ -197,6 +202,9 @@ onMounted(() => {
         <n-space justify="center">
           <n-h2>搭遊覽車[東湖->信基]</n-h2>
         </n-space>
+        <n-space justify="center">
+          <p>車長：劍弘、人溢</p>
+        </n-space>
 
         <n-spin :show="loading">
           <template v-if="errorMessage && !loading">
@@ -244,6 +252,10 @@ onMounted(() => {
       <div>
         <n-space justify="center">
           <n-h2>搭遊覽車[信基->餐廳]</n-h2>
+        </n-space>
+
+        <n-space justify="center">
+          <p>車長：耀哲、仰恩</p>
         </n-space>
 
         <n-spin :show="loading">
@@ -311,9 +323,19 @@ onMounted(() => {
             <n-card
               v-for="group in tableGroups"
               :key="group.busName"
-              :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
               size="large"
             >
+              <template #header>
+                <div>
+                  <div>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</div>
+                  <div
+                    v-if="getParticipantCounts(group.participants).childCount > 0"
+                    class="child-detail"
+                  >
+                    兒童國小以上:{{ getParticipantCounts(group.participants).elementaryAbove }} 兒童國小以下:{{ getParticipantCounts(group.participants).elementaryBelow }} 學齡前:{{ getParticipantCounts(group.participants).preschool }}
+                  </div>
+                </div>
+              </template>
               <n-text>
                 <template
                   v-for="(participant, index) in group.participants"
@@ -349,5 +371,12 @@ onMounted(() => {
   border-radius: 4px;
   font-weight: 500;
   color: green
+}
+
+.child-detail {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 4px;
+  font-weight: normal;
 }
 </style>
