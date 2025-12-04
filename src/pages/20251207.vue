@@ -202,9 +202,6 @@ onMounted(() => {
         <n-space justify="center">
           <n-h2>搭遊覽車[東湖->信基]</n-h2>
         </n-space>
-        <n-space justify="center">
-          <p>車長：劍弘、人溢</p>
-        </n-space>
 
         <n-spin :show="loading">
           <template v-if="errorMessage && !loading">
@@ -252,10 +249,6 @@ onMounted(() => {
       <div>
         <n-space justify="center">
           <n-h2>搭遊覽車[信基->餐廳]</n-h2>
-        </n-space>
-
-        <n-space justify="center">
-          <p>車長：耀哲、仰恩</p>
         </n-space>
 
         <n-spin :show="loading">
