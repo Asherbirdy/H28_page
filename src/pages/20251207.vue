@@ -198,143 +198,143 @@ onMounted(() => {
           <n-h2>搭遊覽車[東湖->信基]</n-h2>
         </n-space>
 
-      <n-spin :show="loading">
-        <template v-if="errorMessage && !loading">
-          <n-empty :description="errorMessage" />
-        </template>
+        <n-spin :show="loading">
+          <template v-if="errorMessage && !loading">
+            <n-empty :description="errorMessage" />
+          </template>
 
-        <template v-else-if="busGroups.length === 0 && !loading">
-          <n-empty description="暫無數據" />
-        </template>
+          <template v-else-if="busGroups.length === 0 && !loading">
+            <n-empty description="暫無數據" />
+          </template>
 
-        <n-space
-          v-else
-          vertical
-          :size="16"
-        >
-          <n-card
-            v-for="group in busGroups"
-            :key="group.busName"
-            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
-            size="large"
+          <n-space
+            v-else
+            vertical
+            :size="16"
           >
-            <n-text>
-              <template
-                v-for="(participant, index) in group.participants"
-                :key="participant.name"
-              >
-                <span
-                  :class="{
-                    'highlight-child': participant.identity === '兒童(國小以上)'
-                      || participant.identity === '兒童(國小以下)'
-                      || participant.identity === '0-3歲'
-                  }"
-                >{{ participant.name }}</span>
-                <span v-if="index < group.participants.length - 1">
-                  、
-                </span>
-              </template>
-            </n-text>
-          </n-card>
+            <n-card
+              v-for="group in busGroups"
+              :key="group.busName"
+              :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
+              size="large"
+            >
+              <n-text>
+                <template
+                  v-for="(participant, index) in group.participants"
+                  :key="participant.name"
+                >
+                  <span
+                    :class="{
+                      'highlight-child': participant.identity === '兒童(國小以上)'
+                        || participant.identity === '兒童(國小以下)'
+                        || participant.identity === '0-3歲'
+                    }"
+                  >{{ participant.name }}</span>
+                  <span v-if="index < group.participants.length - 1">
+                    、
+                  </span>
+                </template>
+              </n-text>
+            </n-card>
+          </n-space>
+        </n-spin>
+      </div>
+
+      <!-- 回程相調車次 -->
+      <div>
+        <n-space justify="center">
+          <n-h2>搭遊覽車[信基->餐廳]</n-h2>
         </n-space>
-      </n-spin>
-    </div>
 
-    <!-- 回程相調車次 -->
-    <div>
-      <n-space justify="center">
-        <n-h2>搭遊覽車[信基->餐廳]</n-h2>
-      </n-space>
+        <n-spin :show="loading">
+          <template v-if="errorMessage && !loading">
+            <n-empty :description="errorMessage" />
+          </template>
 
-      <n-spin :show="loading">
-        <template v-if="errorMessage && !loading">
-          <n-empty :description="errorMessage" />
-        </template>
+          <template v-else-if="busBlendGroups.length === 0 && !loading">
+            <n-empty description="暫無數據" />
+          </template>
 
-        <template v-else-if="busBlendGroups.length === 0 && !loading">
-          <n-empty description="暫無數據" />
-        </template>
-
-        <n-space
-          v-else
-          vertical
-          :size="16"
-        >
-          <n-card
-            v-for="group in busBlendGroups"
-            :key="group.busName"
-            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
-            size="large"
+          <n-space
+            v-else
+            vertical
+            :size="16"
           >
-            <n-text>
-              <template
-                v-for="(participant, index) in group.participants"
-                :key="participant.name"
-              >
-                <span
-                  :class="{
-                    'highlight-child': participant.identity === '兒童(國小以上)'
-                      || participant.identity === '兒童(國小以下)'
-                      || participant.identity === '0-3歲'
-                  }"
-                >{{ participant.name }}</span>
-                <span v-if="index < group.participants.length - 1">
-                  、
-                </span>
-              </template>
-            </n-text>
-          </n-card>
+            <n-card
+              v-for="group in busBlendGroups"
+              :key="group.busName"
+              :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
+              size="large"
+            >
+              <n-text>
+                <template
+                  v-for="(participant, index) in group.participants"
+                  :key="participant.name"
+                >
+                  <span
+                    :class="{
+                      'highlight-child': participant.identity === '兒童(國小以上)'
+                        || participant.identity === '兒童(國小以下)'
+                        || participant.identity === '0-3歲'
+                    }"
+                  >{{ participant.name }}</span>
+                  <span v-if="index < group.participants.length - 1">
+                    、
+                  </span>
+                </template>
+              </n-text>
+            </n-card>
+          </n-space>
+        </n-spin>
+      </div>
+
+      <!-- 桌次名單 -->
+      <div>
+        <n-space justify="center">
+          <n-h1>桌次名單 ({{ totalDiningCount }}人用餐)</n-h1>
         </n-space>
-      </n-spin>
-    </div>
 
-    <!-- 桌次名單 -->
-    <div>
-      <n-space justify="center">
-        <n-h1>桌次名單 ({{ totalDiningCount }}人用餐)</n-h1>
-      </n-space>
+        <n-spin :show="loading">
+          <template v-if="errorMessage && !loading">
+            <n-empty :description="errorMessage" />
+          </template>
 
-      <n-spin :show="loading">
-        <template v-if="errorMessage && !loading">
-          <n-empty :description="errorMessage" />
-        </template>
+          <template v-else-if="tableGroups.length === 0 && !loading">
+            <n-empty description="暫無數據" />
+          </template>
 
-        <template v-else-if="tableGroups.length === 0 && !loading">
-          <n-empty description="暫無數據" />
-        </template>
-
-        <n-space
-          v-else
-          vertical
-          :size="16"
-        >
-          <n-card
-            v-for="group in tableGroups"
-            :key="group.busName"
-            :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
-            size="large"
+          <n-space
+            v-else
+            vertical
+            :size="16"
           >
-            <n-text>
-              <template
-                v-for="(participant, index) in group.participants"
-                :key="participant.name"
-              >
-                <span
-                  :class="{
-                    'highlight-child': participant.identity === '兒童(國小以上)'
-                      || participant.identity === '兒童(國小以下)'
-                      || participant.identity === '0-3歲'
-                  }"
-                >{{ participant.name }}</span>
-                <span v-if="index < group.participants.length - 1">
-                  、
-                </span>
-              </template>
-            </n-text>
-          </n-card>
-        </n-space>
-      </n-spin>
-    </div>
+            <n-card
+              v-for="group in tableGroups"
+              :key="group.busName"
+              :title="`${group.busName} ${getParticipantCounts(group.participants).adultCount}人${getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : ''}`"
+              size="large"
+            >
+              <n-text>
+                <template
+                  v-for="(participant, index) in group.participants"
+                  :key="participant.name"
+                >
+                  <span
+                    :class="{
+                      'highlight-child': participant.identity === '兒童(國小以上)'
+                        || participant.identity === '兒童(國小以下)'
+                        || participant.identity === '0-3歲'
+                    }"
+                  >{{ participant.name }}</span>
+                  <span v-if="index < group.participants.length - 1">
+                    、
+                  </span>
+                </template>
+              </n-text>
+            </n-card>
+          </n-space>
+        </n-spin>
+      </div>
     </n-space>
 
     <!-- 返回頂部按鈕 -->
