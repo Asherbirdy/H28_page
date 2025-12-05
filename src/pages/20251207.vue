@@ -372,6 +372,11 @@ onMounted(() => {
           </n-space>
         </n-spin>
       </div>
+      <img
+        src="/public/20251207會前通知.jpg"
+        alt=""
+        style="width: 100%;"
+      >
     </n-space>
 
     <!-- 返回頂部按鈕 -->
