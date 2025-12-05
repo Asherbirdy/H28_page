@@ -156,8 +156,8 @@ const getParticipantCounts = (participants: GanhuParticipant[]) => {
 }
 
 const getBusLeader = (busName: string) => {
-	if (busName.includes('一車')) return '車長：人溢、劍弘'
-	if (busName.includes('二車')) return '車長：仰恩、耀哲'
+	if (busName.includes('一車')) return '車長：人溢、劍弘(配搭)'
+	if (busName.includes('二車')) return '車長：耀哲、仰恩(配搭)'
 	return ''
 }
 
