@@ -1,8 +1,20 @@
 <script setup lang='ts'>
+import { useHead } from '@vueuse/head'
 import { NSpace, NCard, NText, NSpin, NEmpty, NH2, NBackTop } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
+
+// 設定頁面標題和 meta
+useHead({
+	title: '12/7港湖集中 行前確認表',
+	meta: [
+		{
+			name: 'description',
+			content: '28會所 12月7日港湖集中主日行前確認表，包含遊覽車安排與餐桌座位'
+		}
+	]
+})
 
 interface BusGroup {
 	busName: string

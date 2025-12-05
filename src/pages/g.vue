@@ -3,10 +3,22 @@
 </route>
 
 <script setup lang='ts'>
+import { useHead } from '@vueuse/head'
 import { NSpace, NCard, NSpin, NEmpty, NButton, NTag, NTabs, NTabPane, NText, NCheckbox, NCheckboxGroup } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
+
+// 設定頁面標題
+useHead({
+	title: '12/7 H28港湖集中主日報名 - 28會所',
+	meta: [
+		{
+			name: 'description',
+			content: '28會所 12月7日港湖集中主日報名統計'
+		}
+	]
+})
 
 const participants = ref<GanhuParticipant[]>([])
 const loading = ref(false)
