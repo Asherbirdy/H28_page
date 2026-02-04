@@ -2,21 +2,23 @@
 const data = [
 	{
 		id: '11',
-		name: 'Strensiq',
+		name: 'H28連連一',
 		description: 'Strensiq',
 		pName: 'Strensiq',
 		number: 1,
 		offsetX: 10,
-		offsetY: 0
+		offsetY: 0,
+		type: 'circle'
 	},
 	{
 		id: '2',
-		name: 'qwe',
+		name: 'H28連連二',
 		description: 'qwewq qwewq',
 		pName: 'qeqwe q wewq ',
 		number: 1,
 		offsetX: -10,
-		offsetY: -30
+		offsetY: -30,
+		type: 'circle'
 	}
 ]
 </script>
