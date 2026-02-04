@@ -14,11 +14,11 @@ const data = [
 		description: 'qwewq qwewq',
 		pName: 'qeqwe q wewq ',
 		number: 1,
-		offsetX: 10,
-		offsetY: -40
+		offsetX: -10,
+		offsetY: -70
 	}
 ]
 </script>
 <template>
-  <div>m m mmm</div>
+  <div>m m m mmm</div>
 </template>
