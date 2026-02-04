@@ -35,6 +35,23 @@ interface DataType {
 	}
 }
 
+const testData = ref<DataType>({
+	id: 'test-1',
+	name: '測試項目',
+	title: '測試',
+	description: '這是測試資料',
+	place: Place.b1out,
+	time: Time.front,
+	offsetX: 0,
+	offsetY: 0,
+	shape: Shape.circle,
+	size: {
+		width: circleSize,
+		height: circleSize
+	}
+})
+
+
 const floorOneEnv: DataType[] = [
 	{
 		id: 'elevator',
@@ -86,10 +103,15 @@ const b1inEnv: DataType[] = [
 	}
 ]
 
+// 檢查 URL query 是否有 test=Y
+const route = useRoute()
+const isTestMode = computed(() => route.query.test === 'Y')
+
 const data = ref<DataType[]>([
 	...floorOneEnv,
 	...b1outEnv,
 	...b1inEnv,
+	...(isTestMode.value ? [testData.value] : [])
 ])
 
 // 獲取所有唯一的 time 值
@@ -119,13 +141,22 @@ const filteredData = computed(() => data.value.filter(item => {
 		return placeMatch && timeMatch
 	}))
 
+// 監聽 testData 的變化，更新 data 中的 testData
+watch(() => [testData.value.offsetX, testData.value.offsetY, testData.value.time, testData.value.place], () => {
+	if (isTestMode.value) {
+		const testIndex = data.value.findIndex(item => item.id === 'test-1')
+		if (testIndex !== -1) {
+			data.value[testIndex] = { ...testData.value }
+		}
+	}
+})
+
 const init = async () => {
 	const res = await useGoogleSheetApi.ganghuMeeting()
-	console.log(res)
 
 	// 將 API 數據轉換並添加到 data 中
 	if (res && Array.isArray(res)) {
-		const apiData: DataType[] = res.map((item, index): DataType => ({
+		const apiData: DataType[] = res.map((item, index) => ({
 			id: `api-${index}`,
 			name: item.name,
 			title: item.title,
@@ -146,19 +177,62 @@ const init = async () => {
 			...floorOneEnv,
 			...b1outEnv,
 			...b1inEnv,
-			...apiData
+			...apiData,
+			...(isTestMode.value ? [testData.value] : [])
 		]
 	}
 }
 
 
-	onMounted(() => {
-		init()
-	})
+	onMounted(init)
+
 </script>
 
 <template>
   <div class="p-[clamp(12px,2vw,24px)] max-w-1400px mx-auto">
+    <div v-if="isTestMode" class="mb-4 p-4 border border-solid border-gray-300 rounded bg-gray-50">
+      <div class="text-sm font-bold mb-3">測試模式 - 調整設定</div>
+      <div class="flex flex-wrap gap-4">
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium">時段:</label>
+          <select
+            v-model="testData.time"
+            class="px-2 py-1 border border-solid border-gray-300 rounded bg-white"
+          >
+            <option :value="Time.front">{{ Time.front }}</option>
+            <option :value="Time.back">{{ Time.back }}</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium">地點:</label>
+          <select
+            v-model="testData.place"
+            class="px-2 py-1 border border-solid border-gray-300 rounded bg-white"
+          >
+            <option :value="Place.b1out">{{ Place.b1out }}</option>
+            <option :value="Place.b1in">{{ Place.b1in }}</option>
+            <option :value="Place.floor1">{{ Place.floor1 }}</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium">X 座標:</label>
+          <input
+            v-model.number="testData.offsetX"
+            type="number"
+            class="w-24 px-2 py-1 border border-solid border-gray-300 rounded"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium">Y 座標:</label>
+          <input
+            v-model.number="testData.offsetY"
+            type="number"
+            class="w-24 px-2 py-1 border border-solid border-gray-300 rounded"
+          />
+        </div>
+      </div>
+    </div>
+
     <n-tabs
       v-model:value="state.current"
       type="line"
@@ -215,3 +289,4 @@ const init = async () => {
     </n-tabs>
   </div>
 </template>
+
