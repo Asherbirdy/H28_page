@@ -8,7 +8,7 @@ const data = [
 		number: 1,
 		offsetX: 10,
 		offsetY: 0,
-		type: 'circle'
+		type: 'unit'
 	},
 	{
 		id: '2',
@@ -18,7 +18,31 @@ const data = [
 		number: 1,
 		offsetX: -10,
 		offsetY: -30,
-		type: 'circle'
+		type: 'unit'
+	},
+	{
+		id: '2',
+		name: 'H28連連二',
+		description: 'qwewq qwewq',
+		pName: 'qeqwe q wewq ',
+		number: 1,
+		offsetX: -10,
+		offsetY: -30,
+		type: 'unit'
+	},
+	{
+		id: '22',
+		name: '電梯',
+		description: 'qwewq qwewq',
+		pName: 'qeqwe q wewq ',
+		number: 1,
+		offsetX: -43,
+		offsetY: -25,
+		type: 'object',
+		size: {
+			width: 4,
+			height: 1
+		}
 	}
 ]
 </script>
@@ -33,9 +57,17 @@ const data = [
         v-for="item in data"
         :key="item.id"
         class="item"
+        :class="{
+          'item-unit': item.type === 'unit',
+          'item-object': item.type === 'object'
+        }"
         :style="{
           left: `calc(50% + ${item.offsetX}%)`,
-          top: `calc(50% - ${item.offsetY}%)`
+          top: `calc(50% - ${item.offsetY}%)`,
+          ...(item.type === 'object' && item.size ? {
+            width: `${item.size.width * 50}px`,
+            height: `${item.size.height * 30}px`
+          } : {})
         }"
       >
         {{ item.name }}
@@ -76,6 +108,21 @@ const data = [
 	font-size: 14px;
 	color: #000;
 	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.item-unit {
+	border: 2px solid #000;
+	border-radius: 50%;
+	padding: 8px 12px;
+}
+
+.item-object {
+	border: 2px solid #000;
+	border-radius: 4px;
+	padding: 8px;
 }
 
 @media (max-width: 640px) {
