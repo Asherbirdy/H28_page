@@ -27,12 +27,11 @@ interface DataType {
 	}
 }
 
-const data: DataType[] = [
-	// 固定設施（不受時間限制）
-	{
+const floorOneEnv = [
+		{
 		id: 'elevator',
 		name: '手扶梯',
-		place: Place.b1out,
+		place: Place.floor1,
 		subtitle: '',
 		description: '電梯',
 		offsetX: -40,
@@ -43,6 +42,9 @@ const data: DataType[] = [
 			height: 0.5
 		}
 	},
+]
+
+const b1outEnv = [
 	{
 		id: 'exit1',
 		name: '出口',
@@ -56,7 +58,30 @@ const data: DataType[] = [
 			width: 1,
 			height: 0.5
 		}
-	},
+	},	
+]
+
+const b1inEnv = [
+		{
+		id: 'exit1',
+		name: '出口',
+		place: Place.b1in,
+		subtitle: '',
+		description: '出口',
+		offsetX: 40,
+		offsetY: -20,
+		type: 'rect',
+		size: {
+			width: 1,
+			height: 0.5
+		}
+	},	
+]
+
+const data: DataType[] = [
+	...floorOneEnv,
+	...b1outEnv,
+	...b1inEnv,
 	// 以下是依時段顯示的項目
 	{
 		id: '1',
