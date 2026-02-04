@@ -12,7 +12,7 @@ enum Place {
 }
 
 interface DataType {
-	time: Time
+	time?: Time // 可選屬性，沒有 time 表示在所有時段都顯示
 	place: Place
 	id: string
 	name: string
@@ -28,11 +28,11 @@ interface DataType {
 }
 
 const data: DataType[] = [
+	// 固定設施（不受時間限制）
 	{
 		id: 'elevator',
 		name: '手扶梯',
 		place: Place.b1out,
-		time: Time.front,
 		subtitle: '',
 		description: '電梯',
 		offsetX: -40,
@@ -44,10 +44,9 @@ const data: DataType[] = [
 		}
 	},
 	{
-		id: 'ot',
+		id: 'exit1',
 		name: '出口',
 		place: Place.b1out,
-		time: Time.front,
 		subtitle: '',
 		description: '出口',
 		offsetX: 40,
@@ -58,21 +57,7 @@ const data: DataType[] = [
 			height: 0.5
 		}
 	},
-		{
-		id: 'oasdt',
-		name: '出口',
-		place: Place.b1out,
-		time: Time.back,
-		subtitle: '',
-		description: '出口',
-		offsetX: 0,
-		offsetY: 40,
-		type: 'rect',
-		size: {
-			width: 1,
-			height: 0.5
-		}
-	},
+	// 以下是依時段顯示的項目
 	{
 		id: '1',
 		name: '會議室A',
@@ -377,7 +362,7 @@ const data: DataType[] = [
 
 // 獲取所有唯一的 time 值
 const uniqueTimes = computed(() => {
-	const times = [...new Set(data.map(item => item.time))]
+	const times = [...new Set(data.map(item => item.time).filter((time): time is Time => time !== undefined))]
 	return times.sort()
 })
 
@@ -388,14 +373,20 @@ const uniquePlaces = computed(() => {
 })
 
 // 當前選中的 tab
-const currentTab = ref<string>(uniqueTimes.value[0])
+const currentTab = ref<Time>(uniqueTimes.value[0] || Time.front)
 
 // 當前選中的 place
-const currentPlace = ref<string>(uniquePlaces.value[0])
+const currentPlace = ref<Place>(uniquePlaces.value[0] || Place.b1out)
 
 // 根據當前 tab 和 place 過濾數據
 const filteredData = computed(() => {
-	return data.filter(item => item.time === currentTab.value && item.place === currentPlace.value)
+	return data.filter(item => {
+		// 符合當前 place
+		const placeMatch = item.place === currentPlace.value
+		// 沒有 time 屬性（固定設施）或 time 符合當前 tab
+		const timeMatch = !item.time || item.time === currentTab.value
+		return placeMatch && timeMatch
+	})
 })
 </script>
 
