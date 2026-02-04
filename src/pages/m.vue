@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { NTabs, NTabPane } from 'naive-ui'
+
 interface DataType {
 	time: '會前' | '會後'
 	place: 'B1外' | 'B1内' | '一樓'
@@ -317,49 +319,80 @@ const data: DataType[] = [
 		}
 	}
 ]
+
+// 獲取所有唯一的 time 值
+const uniqueTimes = computed(() => {
+	const times = [...new Set(data.map(item => item.time))]
+	return times.sort()
+})
+
+// 當前選中的 tab
+const currentTab = ref<string>(uniqueTimes.value[0])
+
+// 根據當前 tab 過濾數據
+const filteredData = computed(() => {
+	return data.filter(item => item.time === currentTab.value)
+})
 </script>
 
 <template>
   <div class="page-container">
-    <div class="block">
-      <!-- 中心點標記 -->
-      <div class="center-mark"></div>
-      <!-- 名字項目 -->
-      <div
-        v-for="item in data"
-        :key="item.id"
-        class="item"
-        :class="{
-          'item-circle': item.type === 'circle',
-          'item-rect': item.type === 'rect'
-        }"
-        :style="{
-          left: `calc(50% + ${item.offsetX}%)`,
-          top: `calc(50% - ${item.offsetY}%)`,
-          ...(item.size ? {
-            width: `${item.size.width * 50}px`,
-            height: `${item.size.height * 50}px`
-          } : {})
-        }"
+    <n-tabs
+      v-model:value="currentTab"
+      type="line"
+      animated
+    >
+      <n-tab-pane
+        v-for="time in uniqueTimes"
+        :key="time"
+        :name="time"
+        :tab="time"
       >
-        <div class="item-content">
-          <div v-if="item.subtitle" class="item-subtitle">
-            {{ item.subtitle }}
-          </div>
-          <div class="item-name">
-            {{ item.name }}
+        <div class="block">
+          <!-- 中心點標記 -->
+          <div class="center-mark"></div>
+          <!-- 名字項目 -->
+          <div
+            v-for="item in filteredData"
+            :key="item.id"
+            class="item"
+            :class="{
+              'item-circle': item.type === 'circle',
+              'item-rect': item.type === 'rect'
+            }"
+            :style="{
+              left: `calc(50% + ${item.offsetX}%)`,
+              top: `calc(50% - ${item.offsetY}%)`,
+              ...(item.size ? {
+                width: `${item.size.width * 50}px`,
+                height: `${item.size.height * 50}px`
+              } : {})
+            }"
+          >
+            <div class="item-content">
+              <div v-if="item.subtitle" class="item-subtitle">
+                {{ item.subtitle }}
+              </div>
+              <div class="item-name">
+                {{ item.name }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </n-tab-pane>
+    </n-tabs>
   </div>
 </template>
 
 <style scoped>
 .page-container {
 	padding: 16px;
-	max-width: 800px;
+	max-width: 1200px;
 	margin: 0 auto;
+}
+
+:deep(.n-tabs) {
+	margin-bottom: 16px;
 }
 
 .block {
