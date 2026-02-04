@@ -11,6 +11,8 @@ enum Place {
 	floor1 = '一樓'
 }
 
+const circleSize = 1
+
 interface DataType {
 	time?: Time // 可選屬性，沒有 time 表示在所有時段都顯示
 	place: Place
@@ -27,8 +29,8 @@ interface DataType {
 	}
 }
 
-const floorOneEnv = [
-		{
+const floorOneEnv: DataType[] = [
+	{
 		id: 'elevator',
 		name: '手扶梯',
 		place: Place.floor1,
@@ -41,10 +43,10 @@ const floorOneEnv = [
 			width: 1,
 			height: 0.5
 		}
-	},
+	}
 ]
 
-const b1outEnv = [
+const b1outEnv: DataType[] = [
 	{
 		id: 'exit1',
 		name: '出口',
@@ -58,11 +60,11 @@ const b1outEnv = [
 			width: 1,
 			height: 0.5
 		}
-	},	
+	}
 ]
 
-const b1inEnv = [
-		{
+const b1inEnv: DataType[] = [
+	{
 		id: 'exit1',
 		name: '出口',
 		place: Place.b1in,
@@ -75,7 +77,7 @@ const b1inEnv = [
 			width: 1,
 			height: 0.5
 		}
-	},	
+	}
 ]
 
 const data: DataType[] = [
@@ -94,8 +96,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -109,8 +111,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -124,8 +126,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -139,8 +141,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -154,8 +156,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -169,8 +171,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -184,8 +186,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -199,8 +201,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -214,8 +216,8 @@ const data: DataType[] = [
 		offsetY: 30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -229,8 +231,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -244,8 +246,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -259,8 +261,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -274,8 +276,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -289,8 +291,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -304,8 +306,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -319,8 +321,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -334,8 +336,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -349,8 +351,8 @@ const data: DataType[] = [
 		offsetY: 0,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -364,8 +366,8 @@ const data: DataType[] = [
 		offsetY: -30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	},
 	{
@@ -379,8 +381,8 @@ const data: DataType[] = [
 		offsetY: -30,
 		type: 'circle',
 		size: {
-			width: 0.5,
-			height: 0.5
+			width: circleSize,
+			height: circleSize
 		}
 	}
 ]
@@ -455,8 +457,8 @@ const filteredData = computed(() => {
               left: `calc(50% + ${item.offsetX}%)`,
               top: `calc(50% - ${item.offsetY}%)`,
               ...(item.size ? {
-                width: `${item.size.width * 50}px`,
-                height: `${item.size.height * 50}px`
+                width: `${item.size.width * 5}%`,
+                height: `${item.size.height * 10}%`
               } : {})
             }"
           >
@@ -477,17 +479,17 @@ const filteredData = computed(() => {
 
 <style scoped>
 .page-container {
-	padding: 16px;
-	max-width: 1200px;
+	padding: clamp(12px, 2vw, 24px);
+	max-width: 1400px;
 	margin: 0 auto;
 }
 
 :deep(.n-tabs) {
-	margin-bottom: 16px;
+	margin-bottom: clamp(12px, 2vw, 20px);
 }
 
 .place-selector {
-	margin-bottom: 20px;
+	margin-bottom: clamp(16px, 2.5vw, 24px);
 	display: flex;
 	justify-content: center;
 }
@@ -496,16 +498,17 @@ const filteredData = computed(() => {
 	position: relative;
 	width: 100%;
 	aspect-ratio: 2 / 1;
-	border: 2px solid #000;
+	border: max(1px, 0.2vw) solid #000;
 	background: #fff;
+	font-size: clamp(8px, 1vw, 14px);
 }
 
 .center-mark {
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	width: 8px;
-	height: 8px;
+	width: 0.8%;
+	height: 1.6%;
 	background: #000;
 	border-radius: 50%;
 	transform: translate(-50%, -50%);
@@ -514,7 +517,7 @@ const filteredData = computed(() => {
 .item {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	font-size: 10px;
+	font-size: 1em;
 	color: #000;
 	display: flex;
 	align-items: center;
@@ -525,11 +528,11 @@ const filteredData = computed(() => {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 2px;
+	gap: 0.2em;
 }
 
 .item-subtitle {
-	font-size: 8px;
+	font-size: 0.8em;
 	opacity: 0.7;
 	white-space: nowrap;
 }
@@ -539,29 +542,14 @@ const filteredData = computed(() => {
 }
 
 .item-circle {
-	border: 1px solid #000;
+	border: max(1px, 0.1vw) solid #000;
 	border-radius: 50%;
-	padding: 8px 12px;
+	padding: 0.8em 1.2em;
 }
 
 .item-rect {
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 8px;
-}
-
-@media (max-width: 640px) {
-	.page-container {
-		padding: 12px;
-	}
-
-	.item {
-		font-size: 8px;
-	}
-
-	.center-mark {
-		width: 6px;
-		height: 6px;
-	}
+	border: max(1px, 0.1vw) solid #000;
+	border-radius: 0.4em;
+	padding: 0.8em;
 }
 </style>
