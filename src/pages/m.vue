@@ -407,7 +407,7 @@ const uniquePlaces = computed(() => {
 })
 
 // 當前選中的 tab
-const state =ref({
+const state = ref({
 	current: uniqueTimes.value[0] || Time.front,
 	place: uniquePlaces.value[0] || Place.b1out
 })
