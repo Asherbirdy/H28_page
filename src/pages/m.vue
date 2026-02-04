@@ -29,7 +29,23 @@ interface DataType {
 	}
 }
 
-const floorOneEnv: DataType[] = [
+interface EnvDataType<T extends Place> {
+	time?: Time // 可選屬性，沒有 time 表示在所有時段都顯示
+	place: T
+	id: string
+	name: string
+	subtitle: string
+	description: string
+	offsetX: number
+	offsetY: number
+	type: 'circle' | 'rect'
+	size: {
+		width: number
+		height: number
+	}
+}
+
+const floorOneEnv: EnvDataType<Place.floor1>[] = [
 	{
 		id: 'elevator',
 		name: '手扶梯',
@@ -46,7 +62,7 @@ const floorOneEnv: DataType[] = [
 	}
 ]
 
-const b1outEnv: DataType[] = [
+const b1outEnv: EnvDataType<Place.b1out>[] = [
 	{
 		id: 'exit1',
 		name: '出口',
@@ -63,7 +79,7 @@ const b1outEnv: DataType[] = [
 	}
 ]
 
-const b1inEnv: DataType[] = [
+const b1inEnv: EnvDataType<Place.b1in>[] = [
 	{
 		id: 'exit1',
 		name: '出口',
