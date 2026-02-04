@@ -89,7 +89,6 @@ const data: DataType[] = [
 	...floorOneEnv,
 	...b1outEnv,
 	...b1inEnv,
-	// 以下是依時段顯示的項目
 	{
 		id: '1',
 		name: '會議室A',
