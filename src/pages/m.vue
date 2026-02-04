@@ -489,7 +489,7 @@ const filteredData = computed(() => data.filter(item => {
 .place-selector {
 	margin-bottom: clamp(16px, 2.5vw, 24px);
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 }
 
 .block {
