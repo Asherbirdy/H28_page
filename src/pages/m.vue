@@ -1,44 +1,76 @@
 <script setup lang="ts">
-const data = [
+interface DataType {
+	id: string
+	name: string
+	time: '會前' | '會後'
+	place: 'B1外' | 'B1内' | '一樓'
+	subtitle: string
+	description: string
+	offsetX: number
+	offsetY: number
+	type: 'circle' | 'rect'
+	size: {
+		width: number
+		height: number
+	}
+}
+
+const data: DataType[] = [
 	{
-		id: '11',
+		id: '1',
 		name: 'H28連連一',
+		place: 'B1外',
+		time: '會前',
+		subtitle: '招1',
 		description: 'Strensiq',
-		pName: 'Strensiq',
-		number: 1,
 		offsetX: 10,
 		offsetY: 0,
-		type: 'unit'
+		type: 'circle',
+		size: {
+			width: 0.5,
+			height: 0.5
+		}
 	},
 	{
 		id: '2',
 		name: 'H28連連二',
+		place: 'B1外',
+		time: '會前',
+		subtitle: '招2',
 		description: 'qwewq qwewq',
-		pName: 'qeqwe q wewq ',
-		number: 1,
 		offsetX: -10,
 		offsetY: -30,
-		type: 'unit'
+		type: 'circle',
+		size: {
+			width: 0.5,
+			height: 0.5
+		}
 	},
 	{
-		id: '2',
+		id: '3',
 		name: 'H28連連二',
+		place: 'B1外',
+		time: '會前',
+		subtitle: '招3',
 		description: 'qwewq qwewq',
-		pName: 'qeqwe q wewq ',
-		number: 1,
 		offsetX: -10,
-		offsetY: -30,
-		type: 'unit'
+		offsetY: -0,
+		type: 'circle',
+		size: {
+			width: 0.5,
+			height: 0.5
+		}
 	},
 	{
-		id: '22',
+		id: '4',
 		name: '電梯',
+		place: 'B1外',
+		time: '會前',
+		subtitle: '',
 		description: 'qwewq qwewq',
-		pName: 'qeqwe q wewq ',
-		number: 1,
 		offsetX: -43,
 		offsetY: -25,
-		type: 'object',
+		type: 'rect',
 		size: {
 			width: 4,
 			height: 1
@@ -58,19 +90,26 @@ const data = [
         :key="item.id"
         class="item"
         :class="{
-          'item-unit': item.type === 'unit',
-          'item-object': item.type === 'object'
+          'item-circle': item.type === 'circle',
+          'item-rect': item.type === 'rect'
         }"
         :style="{
           left: `calc(50% + ${item.offsetX}%)`,
           top: `calc(50% - ${item.offsetY}%)`,
-          ...(item.type === 'object' && item.size ? {
+          ...(item.size ? {
             width: `${item.size.width * 50}px`,
-            height: `${item.size.height * 30}px`
+            height: `${item.size.height * 50}px`
           } : {})
         }"
       >
-        {{ item.name }}
+        <div class="item-content">
+          <div v-if="item.subtitle" class="item-subtitle">
+            {{ item.subtitle }}
+          </div>
+          <div class="item-name">
+            {{ item.name }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -105,22 +144,38 @@ const data = [
 .item {
 	position: absolute;
 	transform: translate(-50%, -50%);
-	font-size: 14px;
+	font-size: 10px;
 	color: #000;
-	white-space: nowrap;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.item-unit {
-	border: 2px solid #000;
+.item-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+}
+
+.item-subtitle {
+	font-size: 8px;
+	opacity: 0.7;
+	white-space: nowrap;
+}
+
+.item-name {
+	white-space: nowrap;
+}
+
+.item-circle {
+	border: 1px solid #000;
 	border-radius: 50%;
 	padding: 8px 12px;
 }
 
-.item-object {
-	border: 2px solid #000;
+.item-rect {
+	border: 1px solid #000;
 	border-radius: 4px;
 	padding: 8px;
 }
@@ -131,7 +186,7 @@ const data = [
 	}
 
 	.item {
-		font-size: 12px;
+		font-size: 8px;
 	}
 
 	.center-mark {
