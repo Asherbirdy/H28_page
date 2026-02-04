@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useGoogleSheetApi } from '@/hooks'
 import { NTabs, NTabPane, NRadioGroup, NRadioButton } from 'naive-ui'
 
 enum Time {
@@ -417,6 +418,16 @@ const filteredData = computed(() => data.filter(item => {
 		const timeMatch = !item.time || item.time === state.value.current
 		return placeMatch && timeMatch
 	}))
+
+	const init = async () => {
+		const res = await useGoogleSheetApi.ganghuMeeting()
+		console.log(res)
+	}
+
+
+	onMounted(() => {
+		init()
+	})
 </script>
 
 <template>

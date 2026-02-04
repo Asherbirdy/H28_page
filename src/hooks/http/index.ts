@@ -1,11 +1,11 @@
 import Axios from './axios/Axios'
 import _RequstInterceptors from './axios/requestInterceptors'
-import { urlApi } from './config'
+import { urlGoogleSheet } from './config'
 
 // **
 const useGoogleSheetRequest = new Axios({
   directlyGetData: true,
-  baseURL: urlApi,
+  baseURL: urlGoogleSheet,
   timeout: 1000 * 60 * 5,
   interceptors: _RequstInterceptors,
   abortRepetitiveRequest: true,
