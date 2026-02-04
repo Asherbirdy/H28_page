@@ -22,19 +22,14 @@ interface DataType {
 	description: string
 	offsetX: number
 	offsetY: number
-	type: 'circle' | 'rect'
+	shape: 'circle' | 'rect'
 	size: {
 		width: number
 		height: number
 	}
 }
 
-// 使用 Omit 移除 place 屬性，然後重新定義為泛型，避免重複程式碼
-type EnvDataType<T extends Place> = Omit<DataType, 'place'> & {
-	place: T
-}
-
-const floorOneEnv: EnvDataType<Place.floor1>[] = [
+const floorOneEnv: DataType[] = [
 	{
 		id: 'elevator',
 		name: '手扶梯',
@@ -43,7 +38,7 @@ const floorOneEnv: EnvDataType<Place.floor1>[] = [
 		description: '電梯',
 		offsetX: -40,
 		offsetY: -0,
-		type: 'rect',
+		shape: 'rect',
 		size: {
 			width: 1,
 			height: 0.5
@@ -51,7 +46,7 @@ const floorOneEnv: EnvDataType<Place.floor1>[] = [
 	}
 ]
 
-const b1outEnv: EnvDataType<Place.b1out>[] = [
+const b1outEnv: DataType[] = [
 	{
 		id: 'exit1',
 		name: '出口',
@@ -60,7 +55,7 @@ const b1outEnv: EnvDataType<Place.b1out>[] = [
 		description: '出口',
 		offsetX: 40,
 		offsetY: -20,
-		type: 'rect',
+		shape: 'rect',
 		size: {
 			width: 1,
 			height: 0.5
@@ -68,7 +63,7 @@ const b1outEnv: EnvDataType<Place.b1out>[] = [
 	}
 ]
 
-const b1inEnv: EnvDataType<Place.b1in>[] = [
+const b1inEnv: DataType[] = [
 	{
 		id: 'exit1',
 		name: '出口',
@@ -77,7 +72,7 @@ const b1inEnv: EnvDataType<Place.b1in>[] = [
 		description: '出口',
 		offsetX: 40,
 		offsetY: -20,
-		type: 'rect',
+		shape: 'rect',
 		size: {
 			width: 1,
 			height: 0.5
@@ -99,7 +94,7 @@ const data: DataType[] = [
 		description: '主要會議室',
 		offsetX: -40,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -114,7 +109,7 @@ const data: DataType[] = [
 		description: '次要會議室',
 		offsetX: -30,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -129,7 +124,7 @@ const data: DataType[] = [
 		description: '前台接待',
 		offsetX: -20,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -144,7 +139,7 @@ const data: DataType[] = [
 		description: '員工休息',
 		offsetX: -10,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -159,7 +154,7 @@ const data: DataType[] = [
 		description: '小型會議室',
 		offsetX: 0,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -174,7 +169,7 @@ const data: DataType[] = [
 		description: '物品存放',
 		offsetX: 10,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -189,7 +184,7 @@ const data: DataType[] = [
 		description: '飲水處',
 		offsetX: 20,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -204,7 +199,7 @@ const data: DataType[] = [
 		description: '衛生設施',
 		offsetX: 30,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -219,7 +214,7 @@ const data: DataType[] = [
 		description: '行政辦公',
 		offsetX: 40,
 		offsetY: 30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -234,7 +229,7 @@ const data: DataType[] = [
 		description: '大型會議室',
 		offsetX: -40,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -249,7 +244,7 @@ const data: DataType[] = [
 		description: '產品展示',
 		offsetX: -30,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -264,7 +259,7 @@ const data: DataType[] = [
 		description: '訪客休息',
 		offsetX: -20,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -279,7 +274,7 @@ const data: DataType[] = [
 		description: '員工培訓',
 		offsetX: -10,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -294,7 +289,7 @@ const data: DataType[] = [
 		description: '客戶諮詢',
 		offsetX: 0,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -309,7 +304,7 @@ const data: DataType[] = [
 		description: '業務辦公',
 		offsetX: 10,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -324,7 +319,7 @@ const data: DataType[] = [
 		description: '視訊會議室',
 		offsetX: 20,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -339,7 +334,7 @@ const data: DataType[] = [
 		description: '文件存檔',
 		offsetX: 30,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -354,7 +349,7 @@ const data: DataType[] = [
 		description: '影印列印',
 		offsetX: 40,
 		offsetY: 0,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -369,7 +364,7 @@ const data: DataType[] = [
 		description: '戶外休息',
 		offsetX: -40,
 		offsetY: -30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -384,7 +379,7 @@ const data: DataType[] = [
 		description: '董事會議室',
 		offsetX: -30,
 		offsetY: -30,
-		type: 'circle',
+		shape: 'circle',
 		size: {
 			width: circleSize,
 			height: circleSize
@@ -455,8 +450,8 @@ const filteredData = computed(() => {
             :key="item.id"
             class="item"
             :class="{
-              'item-circle': item.type === 'circle',
-              'item-rect': item.type === 'rect'
+              'item-circle': item.shape === 'circle',
+              'item-rect': item.shape === 'rect'
             }"
             :style="{
               left: `calc(50% + ${item.offsetX}%)`,
