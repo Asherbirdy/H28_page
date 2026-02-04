@@ -86,316 +86,16 @@ const b1inEnv: DataType[] = [
 	}
 ]
 
-const data: DataType[] = [
+const data = ref<DataType[]>([
 	...floorOneEnv,
 	...b1outEnv,
 	...b1inEnv,
-	{
-		id: '1',
-		name: '會議室A',
-		place: Place.b1out,
-		time: Time.front,
-		title: '招1',
-		description: '主要會議室',
-		offsetX: -40,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '2',
-		name: '會議室B',
-		place: Place.b1out,
-		time: Time.front,
-		title: '招2',
-		description: '次要會議室',
-		offsetX: -30,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '3',
-		name: '接待處',
-		place: Place.b1out,
-		time: Time.front,
-		title: '招3',
-		description: '前台接待',
-		offsetX: -20,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '4',
-		name: '休息區A',
-		place: Place.b1out,
-		time: Time.front,
-		title: '招4',
-		description: '員工休息',
-		offsetX: -10,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '5',
-		name: '會議室C',
-		place: Place.b1in,
-		time: Time.front,
-		title: '招5',
-		description: '小型會議室',
-		offsetX: 0,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '6',
-		name: '儲藏室',
-		place: Place.b1in,
-		time: Time.front,
-		title: '招6',
-		description: '物品存放',
-		offsetX: 10,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '7',
-		name: '茶水間',
-		place: Place.b1in,
-		time: Time.front,
-		title: '招7',
-		description: '飲水處',
-		offsetX: 20,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '8',
-		name: '洗手間',
-		place: Place.b1in,
-		time: Time.front,
-		title: '招8',
-		description: '衛生設施',
-		offsetX: 30,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '9',
-		name: '辦公室A',
-		place: Place.b1in,
-		time: Time.back,
-		title: '招9',
-		description: '行政辦公',
-		offsetX: 40,
-		offsetY: 30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '10',
-		name: '會議室D',
-		place: Place.floor1,
-		time: Time.back,
-		title: '招10',
-		description: '大型會議室',
-		offsetX: -40,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '11',
-		name: '展示廳',
-		place: Place.floor1,
-		time: Time.back,
-		title: '招11',
-		description: '產品展示',
-		offsetX: -30,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '12',
-		name: '休息區B',
-		place: Place.floor1,
-		time: Time.back,
-		title: '招12',
-		description: '訪客休息',
-		offsetX: -20,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '13',
-		name: '培訓室',
-		place: Place.floor1,
-		time: Time.back,
-		title: '招13',
-		description: '員工培訓',
-		offsetX: -10,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '14',
-		name: '諮詢室',
-		place: Place.floor1,
-		time: Time.back,
-		title: '招14',
-		description: '客戶諮詢',
-		offsetX: 0,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '15',
-		name: '辦公室B',
-		place: Place.floor1,
-		time: Time.back,
-		title: '招15',
-		description: '業務辦公',
-		offsetX: 10,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '16',
-		name: '會議室E',
-		place: Place.b1out,
-		time: Time.back,
-		title: '招16',
-		description: '視訊會議室',
-		offsetX: 20,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '17',
-		name: '檔案室',
-		place: Place.b1in,
-		time: Time.back,
-		title: '招17',
-		description: '文件存檔',
-		offsetX: 30,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '18',
-		name: '打印室',
-		place: Place.b1in,
-		time: Time.back,
-		title: '招18',
-		description: '影印列印',
-		offsetX: 40,
-		offsetY: 0,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '19',
-		name: '休息區C',
-		place: Place.floor1,
-		time: Time.front,
-		title: '招19',
-		description: '戶外休息',
-		offsetX: -40,
-		offsetY: -30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	},
-	{
-		id: '20',
-		name: '會議室F',
-		place: Place.floor1,
-		time: Time.front,
-		title: '招20',
-		description: '董事會議室',
-		offsetX: -30,
-		offsetY: -30,
-		shape: Shape.circle,
-		size: {
-			width: circleSize,
-			height: circleSize
-		}
-	}
-]
+])
 
 // 獲取所有唯一的 time 值
 const uniqueTimes = computed(() => {
 	const times = [
-		...new Set(data
+		...new Set(data.value
 	.map(item => item.time)
 	.filter((time): time is Time => time !== undefined))]
 	return times.sort()
@@ -403,7 +103,7 @@ const uniqueTimes = computed(() => {
 
 // 獲取所有唯一的 place 值
 const uniquePlaces = computed(() => {
-	const places = [...new Set(data.map(item => item.place))]
+	const places = [...new Set(data.value.map(item => item.place))]
 	return places
 })
 
@@ -413,16 +113,43 @@ const state = ref({
 	place: uniquePlaces.value[0] || Place.b1out
 })
 
-const filteredData = computed(() => data.filter(item => {
+const filteredData = computed(() => data.value.filter(item => {
 		const placeMatch = item.place === state.value.place
 		const timeMatch = !item.time || item.time === state.value.current
 		return placeMatch && timeMatch
 	}))
 
-	const init = async () => {
-		const res = await useGoogleSheetApi.ganghuMeeting()
-		console.log(res)
+const init = async () => {
+	const res = await useGoogleSheetApi.ganghuMeeting()
+	console.log(res)
+
+	// 將 API 數據轉換並添加到 data 中
+	if (res && Array.isArray(res)) {
+		const apiData: DataType[] = res.map((item, index): DataType => ({
+			id: `api-${index}`,
+			name: item.name,
+			title: item.title,
+			description: item.description,
+			place: item.place as Place,
+			time: item.time as Time | undefined,
+			offsetX: item.offsetX,
+			offsetY: item.offsetY,
+			shape: Shape.circle,
+			size: {
+				width: circleSize,
+				height: circleSize
+			}
+		}))
+
+		// 合併環境數據和 API 數據
+		data.value = [
+			...floorOneEnv,
+			...b1outEnv,
+			...b1inEnv,
+			...apiData
+		]
 	}
+}
 
 
 	onMounted(() => {
