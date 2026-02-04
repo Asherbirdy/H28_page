@@ -389,7 +389,10 @@ const data: DataType[] = [
 
 // 獲取所有唯一的 time 值
 const uniqueTimes = computed(() => {
-	const times = [...new Set(data.map(item => item.time).filter((time): time is Time => time !== undefined))]
+	const times = [
+		...new Set(data
+	.map(item => item.time)
+	.filter((time): time is Time => time !== undefined))]
 	return times.sort()
 })
 
@@ -400,27 +403,23 @@ const uniquePlaces = computed(() => {
 })
 
 // 當前選中的 tab
-const currentTab = ref<Time>(uniqueTimes.value[0] || Time.front)
-
-// 當前選中的 place
-const currentPlace = ref<Place>(uniquePlaces.value[0] || Place.b1out)
-
-// 根據當前 tab 和 place 過濾數據
-const filteredData = computed(() => {
-	return data.filter(item => {
-		// 符合當前 place
-		const placeMatch = item.place === currentPlace.value
-		// 沒有 time 屬性（固定設施）或 time 符合當前 tab
-		const timeMatch = !item.time || item.time === currentTab.value
-		return placeMatch && timeMatch
-	})
+const state =ref({
+	current: uniqueTimes.value[0] || Time.front,
+	place: uniquePlaces.value[0] || Place.b1out
 })
+
+const filteredData = computed(
+() => data.filter(item => {
+		const placeMatch = item.place === state.value.place
+		const timeMatch = !item.time || item.time === state.value.current
+		return placeMatch && timeMatch
+	}))
 </script>
 
 <template>
   <div class="page-container">
     <n-tabs
-      v-model:value="currentTab"
+      v-model:value="state.current"
       type="line"
       animated
     >
@@ -431,7 +430,7 @@ const filteredData = computed(() => {
         :tab="time"
       >
         <div class="place-selector">
-          <n-radio-group v-model:value="currentPlace">
+          <n-radio-group v-model:value="state.place">
             <n-radio-button
               v-for="place in uniquePlaces"
               :key="place"
