@@ -1,9 +1,9 @@
 <script setup lang="ts">
 interface DataType {
-	id: string
-	name: string
 	time: '會前' | '會後'
 	place: 'B1外' | 'B1内' | '一樓'
+	id: string
+	name: string
 	subtitle: string
 	description: string
 	offsetX: number
