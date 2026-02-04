@@ -392,7 +392,7 @@ const uniqueTimes = computed(() => {
 	const times = [
 		...new Set(data
 	.map(item => item.time)
-	.filter((time): time is Time => time !== undefined))]
+	.filter((time)=> time !== undefined))]
 	return times.sort()
 })
 
