@@ -123,9 +123,13 @@ const state = ref({
 	place: uniquePlaces.value[0] || Place.b1out
 })
 
+enum Test {
+	id = 'test-1'	
+}
+
 // 測試數據 - 自動跟隨當前選中的時段和地點
 const testData = computed<DataType>(() => ({
-	id: 'test-1',
+	id: Test.id,
 	name: '測試項目',
 	title: '測試',
 	description: '這是測試資料',
@@ -149,7 +153,7 @@ const filteredData = computed(() => data.value.filter(item => {
 // 監聽 testData 的變化，更新 data 中的 testData
 watch(testData, () => {
 	if (isTestMode.value) {
-		const testIndex = data.value.findIndex(item => item.id === 'test-1')
+		const testIndex = data.value.findIndex(item => item.id === Test.id)
 		if (testIndex !== -1) {
 			data.value[testIndex] = { ...testData.value }
 		}
@@ -261,7 +265,7 @@ const init = async () => {
               top: `calc(50% - ${item.offsetY}%)`,
               ...(item.size ? {
                 width: `${item.size.width * 5}%`,
-                height: `${item.size.height * 10}%`
+                height: `${item.size.height * 10.5}%`
               } : {})
             }"
           >
