@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NTabs, NTabPane } from 'naive-ui'
+import { NTabs, NTabPane, NRadioGroup, NRadioButton } from 'naive-ui'
 
 enum Time {
 	front = '會前',
@@ -381,12 +381,21 @@ const uniqueTimes = computed(() => {
 	return times.sort()
 })
 
+// 獲取所有唯一的 place 值
+const uniquePlaces = computed(() => {
+	const places = [...new Set(data.map(item => item.place))]
+	return places
+})
+
 // 當前選中的 tab
 const currentTab = ref<string>(uniqueTimes.value[0])
 
-// 根據當前 tab 過濾數據
+// 當前選中的 place
+const currentPlace = ref<string>(uniquePlaces.value[0])
+
+// 根據當前 tab 和 place 過濾數據
 const filteredData = computed(() => {
-	return data.filter(item => item.time === currentTab.value)
+	return data.filter(item => item.time === currentTab.value && item.place === currentPlace.value)
 })
 </script>
 
@@ -403,6 +412,17 @@ const filteredData = computed(() => {
         :name="time"
         :tab="time"
       >
+        <div class="place-selector">
+          <n-radio-group v-model:value="currentPlace">
+            <n-radio-button
+              v-for="place in uniquePlaces"
+              :key="place"
+              :value="place"
+            >
+              {{ place }}
+            </n-radio-button>
+          </n-radio-group>
+        </div>
         <div class="block">
           <!-- 中心點標記 -->
           <div class="center-mark"></div>
@@ -448,6 +468,12 @@ const filteredData = computed(() => {
 
 :deep(.n-tabs) {
 	margin-bottom: 16px;
+}
+
+.place-selector {
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: center;
 }
 
 .block {
