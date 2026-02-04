@@ -420,11 +420,12 @@ const filteredData = computed(() => data.filter(item => {
 </script>
 
 <template>
-  <div class="page-container">
+  <div class="p-[clamp(12px,2vw,24px)] max-w-1400px mx-auto">
     <n-tabs
       v-model:value="state.current"
       type="line"
       animated
+      class="mb-[clamp(12px,2vw,20px)]"
     >
       <n-tab-pane
         v-for="time in uniqueTimes"
@@ -432,7 +433,7 @@ const filteredData = computed(() => data.filter(item => {
         :name="time"
         :tab="time"
       >
-        <div class="place-selector">
+        <div class="mb-[clamp(16px,2.5vw,24px)] flex justify-start">
           <n-radio-group v-model:value="state.place">
             <n-radio-button
               v-for="place in uniquePlaces"
@@ -443,16 +444,16 @@ const filteredData = computed(() => data.filter(item => {
             </n-radio-button>
           </n-radio-group>
         </div>
-        <div class="block">
+        <div class="relative w-full aspect-[2/1] border-[max(1px,0.2vw)] border-solid border-black bg-white text-[clamp(8px,1vw,14px)]">
           <!-- 名字項目 -->
           <div
             v-for="item in filteredData"
             :key="item.id"
-            class="item"
-            :class="{
-              'item-circle': item.shape === 'circle',
-              'item-rect': item.shape === 'rect'
-            }"
+            class="absolute -translate-x-1/2 -translate-y-1/2 text-1em color-black flex items-center justify-center"
+            :class="[
+              item.shape === 'circle' ? 'border-[max(1px,0.1vw)] border-solid border-black rounded-full px-1.2em py-0.8em' : '',
+              item.shape === 'rect' ? 'border-[max(1px,0.1vw)] border-solid border-black rounded-0.4em p-0.8em' : ''
+            ]"
             :style="{
               left: `calc(50% + ${item.offsetX}%)`,
               top: `calc(50% - ${item.offsetY}%)`,
@@ -462,11 +463,11 @@ const filteredData = computed(() => data.filter(item => {
               } : {})
             }"
           >
-            <div class="item-content">
-              <div v-if="item.subtitle" class="item-subtitle">
+            <div class="flex flex-col items-center gap-0.2em">
+              <div v-if="item.subtitle" class="text-1em opacity-70 whitespace-nowrap">
                 {{ item.subtitle }}
               </div>
-              <div class="item-name">
+              <div class="whitespace-nowrap">
                 {{ item.name }}
               </div>
             </div>
@@ -476,69 +477,3 @@ const filteredData = computed(() => data.filter(item => {
     </n-tabs>
   </div>
 </template>
-
-<style scoped>
-.page-container {
-	padding: clamp(12px, 2vw, 24px);
-	max-width: 1400px;
-	margin: 0 auto;
-}
-
-:deep(.n-tabs) {
-	margin-bottom: clamp(12px, 2vw, 20px);
-}
-
-.place-selector {
-	margin-bottom: clamp(16px, 2.5vw, 24px);
-	display: flex;
-	justify-content: start;
-}
-
-.block {
-	position: relative;
-	width: 100%;
-	aspect-ratio: 2 / 1;
-	border: max(1px, 0.2vw) solid #000;
-	background: #fff;
-	font-size: clamp(8px, 1vw, 14px);
-}
-
-.item {
-	position: absolute;
-	transform: translate(-50%, -50%);
-	font-size: 1em;
-	color: #000;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.item-content {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.2em;
-}
-
-.item-subtitle {
-	font-size: 1em;
-	opacity: 0.7;
-	white-space: nowrap;
-}
-
-.item-name {
-	white-space: nowrap;
-}
-
-.item-circle {
-	border: max(1px, 0.1vw) solid #000;
-	border-radius: 50%;
-	padding: 0.8em 1.2em;
-}
-
-.item-rect {
-	border: max(1px, 0.1vw) solid #000;
-	border-radius: 0.4em;
-	padding: 0.8em;
-}
-</style>

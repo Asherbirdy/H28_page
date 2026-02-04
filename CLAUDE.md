@@ -109,6 +109,8 @@ This is a Vue 3 + TypeScript application using Composition API with the followin
 
 **Styling**: UnoCSS utilities with custom theme. Custom colors: primary (#32457B), secondary (#4D9CFF), third (#2471FB).
 
+**🚨 CRITICAL - NO SCOPED STYLES**: Do NOT use `<style scoped>` in Vue components. All styling MUST be done using UnoCSS utility classes directly in templates.
+
 ## Development Commands
 
 ```bash
