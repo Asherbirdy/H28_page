@@ -29,20 +29,9 @@ interface DataType {
 	}
 }
 
-interface EnvDataType<T extends Place> {
-	time?: Time // 可選屬性，沒有 time 表示在所有時段都顯示
+// 使用 Omit 移除 place 屬性，然後重新定義為泛型，避免重複程式碼
+type EnvDataType<T extends Place> = Omit<DataType, 'place'> & {
 	place: T
-	id: string
-	name: string
-	subtitle: string
-	description: string
-	offsetX: number
-	offsetY: number
-	type: 'circle' | 'rect'
-	size: {
-		width: number
-		height: number
-	}
 }
 
 const floorOneEnv: EnvDataType<Place.floor1>[] = [
