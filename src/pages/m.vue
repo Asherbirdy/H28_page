@@ -534,7 +534,7 @@ const filteredData = computed(() => data.filter(item => {
 }
 
 .item-subtitle {
-	font-size: 0.8em;
+	font-size: 1em;
 	opacity: 0.7;
 	white-space: nowrap;
 }
