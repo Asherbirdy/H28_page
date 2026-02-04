@@ -408,8 +408,7 @@ const state =ref({
 	place: uniquePlaces.value[0] || Place.b1out
 })
 
-const filteredData = computed(
-() => data.filter(item => {
+const filteredData = computed(() => data.filter(item => {
 		const placeMatch = item.place === state.value.place
 		const timeMatch = !item.time || item.time === state.value.current
 		return placeMatch && timeMatch
