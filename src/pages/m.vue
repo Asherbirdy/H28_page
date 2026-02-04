@@ -444,8 +444,6 @@ const filteredData = computed(() => data.filter(item => {
           </n-radio-group>
         </div>
         <div class="block">
-          <!-- 中心點標記 -->
-          <div class="center-mark"></div>
           <!-- 名字項目 -->
           <div
             v-for="item in filteredData"
@@ -503,17 +501,6 @@ const filteredData = computed(() => data.filter(item => {
 	border: max(1px, 0.2vw) solid #000;
 	background: #fff;
 	font-size: clamp(8px, 1vw, 14px);
-}
-
-.center-mark {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 0.8%;
-	height: 1.6%;
-	background: #000;
-	border-radius: 50%;
-	transform: translate(-50%, -50%);
 }
 
 .item {
