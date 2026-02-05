@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useGoogleSheetApi } from '@/hooks'
-import { NTabs, NTabPane, NRadioGroup, NRadioButton } from 'naive-ui'
+import { NTabs, NTabPane, NRadioGroup, NRadioButton, NSpin } from 'naive-ui'
+import { fetchMeetingData } from '@/hook/apis/ganhu'
 
 enum Time {
 	front = '會前',
@@ -39,6 +39,8 @@ const testOffset = ref({
 	x: 0,
 	y: 0
 })
+
+const loading = ref(false)
 
 
 const floorOneEnv: DataType[] = [
@@ -161,34 +163,41 @@ watch(testData, () => {
 })
 
 const init = async () => {
-	const res = await useGoogleSheetApi.ganghuMeeting()
+	try {
+		loading.value = true
+		const res = await fetchMeetingData()
 
-	// 將 API 數據轉換並添加到 data 中
-	if (res && Array.isArray(res)) {
-		const apiData: DataType[] = res.map((item, index) => ({
-			id: `api-${index}`,
-			name: item.name,
-			title: item.title,
-			description: item.description,
-			place: item.place as Place,
-			time: item.time as Time | undefined,
-			offsetX: item.offsetX,
-			offsetY: item.offsetY,
-			shape: Shape.circle,
-			size: {
-				width: circleSize,
-				height: circleSize
-			}
-		}))
+		// 將 API 數據轉換並添加到 data 中
+		if (res && Array.isArray(res)) {
+			const apiData: DataType[] = res.map((item, index) => ({
+				id: `api-${index}`,
+				name: item.name,
+				title: item.title,
+				description: item.description,
+				place: item.place as Place,
+				time: item.time as Time | undefined,
+				offsetX: item.offsetX,
+				offsetY: item.offsetY,
+				shape: Shape.circle,
+				size: {
+					width: circleSize,
+					height: circleSize
+				}
+			}))
 
-		// 合併環境數據和 API 數據
-		data.value = [
-			...floorOneEnv,
-			...b1outEnv,
-			...b1inEnv,
-			...apiData,
-			...(isTestMode.value ? [testData.value] : [])
-		]
+			// 合併環境數據和 API 數據
+			data.value = [
+				...floorOneEnv,
+				...b1outEnv,
+				...b1inEnv,
+				...apiData,
+				...(isTestMode.value ? [testData.value] : [])
+			]
+		}
+	} catch (error) {
+		console.error('載入資料失敗:', error)
+	} finally {
+		loading.value = false
 	}
 }
 
@@ -204,7 +213,8 @@ const init = async () => {
 </script>
 
 <template>
-  <div class="p-[clamp(12px,2vw,24px)] max-w-1400px mx-auto">
+  <n-spin :show="loading">
+    <div class="p-[clamp(12px,2vw,24px)] max-w-1400px mx-auto">
     <div v-if="isTestMode" class="mb-4 p-4 border border-solid border-gray-300 rounded bg-gray-50">
       <div class="text-sm font-bold mb-3">測試模式 - 調整位置</div>
       <div class="flex gap-4">
@@ -281,6 +291,7 @@ const init = async () => {
         </div>
       </n-tab-pane>
     </n-tabs>
-  </div>
+    </div>
+  </n-spin>
 </template>
 
