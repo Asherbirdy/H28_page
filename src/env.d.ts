@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_PORT: string
   readonly VITE_API_MEETING: string
   readonly VITE_API_MEETING_DATA: string
+  readonly VITE_API_CHILDREN_MEETING: string
 }
 
 interface ImportMeta {
