@@ -40,76 +40,88 @@ const participants = computed<ChildrenMeetingParticipant[]>(() => {
 	return result
 })
 
-const isParent = (identity: string) =>
-	identity === IdentityEnum.家長 ||
+const isAdult = (identity: string) => identity === IdentityEnum.家長
+
+const isGospelAdult = (identity: string) =>
 	identity === IdentityEnum.家長福音朋友男 ||
 	identity === IdentityEnum.家長福音朋友女
 
 const isChild = (identity: string) =>
 	identity === IdentityEnum.兒童男孩 ||
-	identity === IdentityEnum.兒童女孩 ||
+	identity === IdentityEnum.兒童女孩
+
+const isGospelChild = (identity: string) =>
 	identity === IdentityEnum.兒童福音朋友男孩 ||
 	identity === IdentityEnum.兒童福音朋友女孩
 
-const isServer = (identity: string) => identity === IdentityEnum.服事者
-
-const isYouthLeader = (identity: string) =>
+const isServerOrLeader = (identity: string) =>
+	identity === IdentityEnum.服事者 ||
 	identity === IdentityEnum.青少年弟兄隊輔 ||
-	identity === IdentityEnum.青少年姊妹隊輔
-
-const isCollegeLeader = (identity: string) =>
+	identity === IdentityEnum.青少年姊妹隊輔 ||
 	identity === IdentityEnum.大專弟兄隊輔 ||
 	identity === IdentityEnum.大專姊妹隊輔
 
-interface ChurchRow {
+interface ChurchBreakdown {
 	church: string
-	parent: number
-	child: number
-	server: number
-	youthLeader: number
-	collegeLeader: number
+	adults: ChildrenMeetingParticipant[]
+	gospelAdults: ChildrenMeetingParticipant[]
+	children: ChildrenMeetingParticipant[]
+	gospelChildren: ChildrenMeetingParticipant[]
+	serversAndLeaders: ChildrenMeetingParticipant[]
 	total: number
 }
 
-const churchTableData = computed<ChurchRow[]>(() => {
-	const map = new Map<string, ChurchRow>()
+const churchTableData = computed<ChurchBreakdown[]>(() => {
+	const map = new Map<string, ChurchBreakdown>()
 
 	for (const p of participants.value) {
 		if (!map.has(p.church)) {
 			map.set(p.church, {
 				church: p.church,
-				parent: 0,
-				child: 0,
-				server: 0,
-				youthLeader: 0,
-				collegeLeader: 0,
+				adults: [],
+				gospelAdults: [],
+				children: [],
+				gospelChildren: [],
+				serversAndLeaders: [],
 				total: 0
 			})
 		}
 
 		const row = map.get(p.church)!
-		if (isParent(p.identity)) row.parent++
-		else if (isChild(p.identity)) row.child++
-		else if (isServer(p.identity)) row.server++
-		else if (isYouthLeader(p.identity)) row.youthLeader++
-		else if (isCollegeLeader(p.identity)) row.collegeLeader++
+		if (isAdult(p.identity)) row.adults.push(p)
+		else if (isGospelAdult(p.identity)) row.gospelAdults.push(p)
+		else if (isChild(p.identity)) row.children.push(p)
+		else if (isGospelChild(p.identity)) row.gospelChildren.push(p)
+		else if (isServerOrLeader(p.identity)) row.serversAndLeaders.push(p)
 		row.total++
 	}
 
-	return Array.from(map.values()).sort((a, b) => a.church.localeCompare(b.church))
+	const sortByName = (list: ChildrenMeetingParticipant[]) =>
+		[...list].sort((a, b) => a.name.localeCompare(b.name))
+
+	return Array.from(map.values())
+		.map((row) => ({
+			...row,
+			adults: sortByName(row.adults),
+			gospelAdults: sortByName(row.gospelAdults),
+			children: sortByName(row.children),
+			gospelChildren: sortByName(row.gospelChildren),
+			serversAndLeaders: sortByName(row.serversAndLeaders)
+		}))
+		.sort((a, b) => a.church.localeCompare(b.church))
 })
 
 const churchTotals = computed(() => {
 	return churchTableData.value.reduce(
 		(acc, row) => ({
-			parent: acc.parent + row.parent,
-			child: acc.child + row.child,
-			server: acc.server + row.server,
-			youthLeader: acc.youthLeader + row.youthLeader,
-			collegeLeader: acc.collegeLeader + row.collegeLeader,
+			adults: acc.adults + row.adults.length,
+			gospelAdults: acc.gospelAdults + row.gospelAdults.length,
+			children: acc.children + row.children.length,
+			gospelChildren: acc.gospelChildren + row.gospelChildren.length,
+			serversAndLeaders: acc.serversAndLeaders + row.serversAndLeaders.length,
 			total: acc.total + row.total
 		}),
-		{ parent: 0, child: 0, server: 0, youthLeader: 0, collegeLeader: 0, total: 0 }
+		{ adults: 0, gospelAdults: 0, children: 0, gospelChildren: 0, serversAndLeaders: 0, total: 0 }
 	)
 })
 
@@ -182,6 +194,7 @@ const groupedData = computed<GroupSection[]>(() => {
         </n-h2>
         <n-button
           type="primary"
+          size="small"
           :loading="loading"
           @click="loadData"
         >
@@ -201,19 +214,79 @@ const groupedData = computed<GroupSection[]>(() => {
         animated
       >
         <n-tab-pane name="church" tab="各會所報名">
-          <n-card>
-            <n-space :size="[16, 8]">
-              <n-text
-                v-for="row in churchTableData"
-                :key="row.church"
-              >
-                {{ row.church }}:{{ row.total }} 人
-              </n-text>
-              <n-text strong>
-                總計:{{ churchTotals.total }} 人
-              </n-text>
-            </n-space>
-          </n-card>
+          <n-space vertical :size="16">
+            <n-card>
+              <n-space :size="[16, 8]">
+                <n-text>
+                  家長:{{ churchTotals.adults }} 位
+                </n-text>
+                <n-text>
+                  福音家長:{{ churchTotals.gospelAdults }} 位
+                </n-text>
+                <n-text>
+                  兒童:{{ churchTotals.children }} 位
+                </n-text>
+                <n-text>
+                  福音兒童:{{ churchTotals.gospelChildren }} 位
+                </n-text>
+                <n-text>
+                  服事:{{ churchTotals.serversAndLeaders }} 位
+                </n-text>
+                <n-text strong>
+                  總計:{{ churchTotals.total }} 人
+                </n-text>
+              </n-space>
+            </n-card>
+
+            <n-card
+              v-for="row in churchTableData"
+              :key="row.church"
+              :title="`${row.church} (${row.total} 人)`"
+            >
+              <n-space vertical :size="8">
+                <div v-if="row.adults.length">
+                  <n-text strong class="block">
+                    家長:{{ row.adults.length }} 位
+                  </n-text>
+                  <n-text>
+                    {{ row.adults.map((p) => p.name).join('、') }}
+                  </n-text>
+                </div>
+                <div v-if="row.gospelAdults.length">
+                  <n-text strong class="block">
+                    福音家長:{{ row.gospelAdults.length }} 位
+                  </n-text>
+                  <n-text>
+                    {{ row.gospelAdults.map((p) => p.name).join('、') }}
+                  </n-text>
+                </div>
+                <div v-if="row.children.length">
+                  <n-text strong class="block">
+                    兒童:{{ row.children.length }} 位
+                  </n-text>
+                  <n-text>
+                    {{ row.children.map((p) => p.name).join('、') }}
+                  </n-text>
+                </div>
+                <div v-if="row.gospelChildren.length">
+                  <n-text strong class="block">
+                    福音兒童:{{ row.gospelChildren.length }} 位
+                  </n-text>
+                  <n-text>
+                    {{ row.gospelChildren.map((p) => p.name).join('、') }}
+                  </n-text>
+                </div>
+                <div v-if="row.serversAndLeaders.length">
+                  <n-text strong class="block">
+                    服事:{{ row.serversAndLeaders.length }} 位
+                  </n-text>
+                  <n-text>
+                    {{ row.serversAndLeaders.map((p) => `${p.name}(${p.identity})`).join('、') }}
+                  </n-text>
+                </div>
+              </n-space>
+            </n-card>
+          </n-space>
         </n-tab-pane>
 
         <n-tab-pane name="group" tab="分組">
