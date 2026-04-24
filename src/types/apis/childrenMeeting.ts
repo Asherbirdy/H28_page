@@ -49,16 +49,26 @@ export enum GroupEnum {
 export interface ChildrenMeetingParticipant {
   church: string; // 會所
   name: string; //  名字
-  gender: '男' | '女'; // 性別
-  identity: IdentityEnum; // 身份
-  grade: GradeEnum; // 年級
+  gender: '男' | '女' | ''; // 性別
+  identity: IdentityEnum | ''; // 身份
+  grade: GradeEnum | ''; // 年級
   clothSize: string; // 衣服尺寸
   school: string; // 學校
-  adultName: string; // 家長姓名  
+  adultName: string; // 家長姓名
   cost: string;
   firstDay: string | boolean;
   secondDay: string | boolean;
-  group: GroupEnum;
+  group: GroupEnum | '';
 }
 
-export type ChildrenMeetingParticipantsResponse = ChildrenMeetingParticipant[];
+export interface ChildrenMeetingParticipantsResponse {
+  H20: ChildrenMeetingParticipant[]
+  H21: ChildrenMeetingParticipant[]
+  H25: ChildrenMeetingParticipant[]
+  H28: ChildrenMeetingParticipant[]
+  H45: ChildrenMeetingParticipant[]
+  H48: ChildrenMeetingParticipant[]
+  H65: ChildrenMeetingParticipant[]
+  H70: ChildrenMeetingParticipant[]
+  H78: ChildrenMeetingParticipant[]
+}
