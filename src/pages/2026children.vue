@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { NSpin, NSpace, NCard, NTabs, NTabPane, NTag, NEmpty, NH2, NText, NButton } from 'naive-ui'
+import { NSpin, NSpace, NCard, NTabs, NTabPane, NTag, NEmpty, NH2, NText, NButton, NModal, NDescriptions, NDescriptionsItem } from 'naive-ui'
 
 import { fetchChildrenMeetingParticipants } from '@/hook/apis/childrenMeeting'
 import type { ChildrenMeetingParticipant, ChildrenMeetingParticipantsResponse } from '@/types/apis/childrenMeeting'
@@ -159,6 +159,19 @@ interface GroupSection {
 	participants: ChildrenMeetingParticipant[]
 }
 
+const selectedParticipant = ref<ChildrenMeetingParticipant | null>(null)
+const showParticipantModal = ref(false)
+
+const openParticipantModal = (participant: ChildrenMeetingParticipant) => {
+	selectedParticipant.value = participant
+	showParticipantModal.value = true
+}
+
+const formatDayValue = (value: string | boolean) => {
+	if (typeof value === 'boolean') return value ? '是' : '否'
+	return value || '-'
+}
+
 const groupedData = computed<GroupSection[]>(() => {
 	const sections: GroupSection[] = []
 	for (let i = 0; i < groupOrder.length; i++) {
@@ -248,41 +261,89 @@ const groupedData = computed<GroupSection[]>(() => {
                   <n-text strong class="block">
                     家長:{{ row.adults.length }} 位
                   </n-text>
-                  <n-text>
-                    {{ row.adults.map((p) => p.name).join('、') }}
-                  </n-text>
+                  <n-space :size="[6, 6]">
+                    <n-tag
+                      v-for="(participant, index) in row.adults"
+                      :key="`${row.church}-adult-${participant.name}-${index}`"
+                      :bordered="false"
+                      size="small"
+                      class="cursor-pointer"
+                      @click="openParticipantModal(participant)"
+                    >
+                      {{ participant.name }}
+                    </n-tag>
+                  </n-space>
                 </div>
                 <div v-if="row.gospelAdults.length">
                   <n-text strong class="block">
                     福音家長:{{ row.gospelAdults.length }} 位
                   </n-text>
-                  <n-text>
-                    {{ row.gospelAdults.map((p) => p.name).join('、') }}
-                  </n-text>
+                  <n-space :size="[6, 6]">
+                    <n-tag
+                      v-for="(participant, index) in row.gospelAdults"
+                      :key="`${row.church}-gospelAdult-${participant.name}-${index}`"
+                      :bordered="false"
+                      size="small"
+                      class="cursor-pointer"
+                      @click="openParticipantModal(participant)"
+                    >
+                      {{ participant.name }}
+                    </n-tag>
+                  </n-space>
                 </div>
                 <div v-if="row.children.length">
                   <n-text strong class="block">
                     兒童:{{ row.children.length }} 位
                   </n-text>
-                  <n-text>
-                    {{ row.children.map((p) => p.name).join('、') }}
-                  </n-text>
+                  <n-space :size="[6, 6]">
+                    <n-tag
+                      v-for="(participant, index) in row.children"
+                      :key="`${row.church}-child-${participant.name}-${index}`"
+                      :bordered="false"
+                      size="small"
+                      class="cursor-pointer"
+                      @click="openParticipantModal(participant)"
+                    >
+                      {{ participant.name }}
+                    </n-tag>
+                  </n-space>
                 </div>
                 <div v-if="row.gospelChildren.length">
                   <n-text strong class="block">
                     福音兒童:{{ row.gospelChildren.length }} 位
                   </n-text>
-                  <n-text>
-                    {{ row.gospelChildren.map((p) => p.name).join('、') }}
-                  </n-text>
+                  <n-space :size="[6, 6]">
+                    <n-tag
+                      v-for="(participant, index) in row.gospelChildren"
+                      :key="`${row.church}-gospel-${participant.name}-${index}`"
+                      :bordered="false"
+                      size="small"
+                      class="cursor-pointer"
+                      @click="openParticipantModal(participant)"
+                    >
+                      {{ participant.name }}
+                    </n-tag>
+                  </n-space>
                 </div>
                 <div v-if="row.serversAndLeaders.length">
                   <n-text strong class="block">
                     服事:{{ row.serversAndLeaders.length }} 位
                   </n-text>
-                  <n-text>
-                    {{ row.serversAndLeaders.map((p) => `${p.name}(${p.identity})`).join('、') }}
-                  </n-text>
+                  <n-space :size="[6, 6]">
+                    <n-tag
+                      v-for="(participant, index) in row.serversAndLeaders"
+                      :key="`${row.church}-server-${participant.name}-${index}`"
+                      :bordered="false"
+                      size="small"
+                      class="cursor-pointer"
+                      @click="openParticipantModal(participant)"
+                    >
+                      {{ participant.name }}
+                      <n-text depth="3" class="ml-1">
+                        {{ participant.identity }}
+                      </n-text>
+                    </n-tag>
+                  </n-space>
                 </div>
               </n-space>
             </n-card>
@@ -331,5 +392,74 @@ const groupedData = computed<GroupSection[]>(() => {
         </n-tab-pane>
       </n-tabs>
     </n-space>
+
+    <n-modal
+      v-model:show="showParticipantModal"
+      preset="card"
+      title="報名資料"
+      class="max-w-lg"
+    >
+      <n-descriptions
+        v-if="selectedParticipant"
+        :column="1"
+        label-placement="left"
+        bordered
+      >
+        <n-descriptions-item label="會所">
+          {{ selectedParticipant.church }}
+        </n-descriptions-item>
+        <n-descriptions-item label="姓名">
+          {{ selectedParticipant.name }}
+        </n-descriptions-item>
+        <n-descriptions-item label="性別">
+          {{ selectedParticipant.gender || '-' }}
+        </n-descriptions-item>
+        <n-descriptions-item label="身份">
+          {{ selectedParticipant.identity || '-' }}
+        </n-descriptions-item>
+        <n-descriptions-item
+          v-if="selectedParticipant.grade"
+          label="年級"
+        >
+          {{ selectedParticipant.grade }}
+        </n-descriptions-item>
+        <n-descriptions-item
+          v-if="selectedParticipant.school"
+          label="學校"
+        >
+          {{ selectedParticipant.school }}
+        </n-descriptions-item>
+        <n-descriptions-item
+          v-if="selectedParticipant.adultName"
+          label="家長姓名"
+        >
+          {{ selectedParticipant.adultName }}
+        </n-descriptions-item>
+        <n-descriptions-item
+          v-if="selectedParticipant.clothSize"
+          label="衣服尺寸"
+        >
+          {{ selectedParticipant.clothSize }}
+        </n-descriptions-item>
+        <n-descriptions-item
+          v-if="selectedParticipant.group"
+          label="分組"
+        >
+          {{ selectedParticipant.group }}
+        </n-descriptions-item>
+        <n-descriptions-item label="第一天">
+          {{ formatDayValue(selectedParticipant.firstDay) }}
+        </n-descriptions-item>
+        <n-descriptions-item label="第二天">
+          {{ formatDayValue(selectedParticipant.secondDay) }}
+        </n-descriptions-item>
+        <n-descriptions-item
+          v-if="selectedParticipant.cost"
+          label="費用"
+        >
+          {{ selectedParticipant.cost }}
+        </n-descriptions-item>
+      </n-descriptions>
+    </n-modal>
   </n-spin>
 </template>
