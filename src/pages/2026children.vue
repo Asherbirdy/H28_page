@@ -145,13 +145,6 @@ const groupedData = computed<GroupSection[]>(() => {
 	return sections
 })
 
-const getIdentityTagType = (identity: string): 'success' | 'info' | 'warning' | 'error' | 'default' => {
-	if (isChild(identity)) return 'success'
-	if (isParent(identity)) return 'info'
-	if (isServer(identity)) return 'warning'
-	if (isYouthLeader(identity) || isCollegeLeader(identity)) return 'error'
-	return 'default'
-}
 </script>
 
 <template>
@@ -169,7 +162,7 @@ const getIdentityTagType = (identity: string): 'success' | 'info' | 'warning' | 
         align="center"
       >
         <n-h2 class="m-0">
-          H28 兒童相調報名統計
+          2026兒童品格園統計
         </n-h2>
         <n-button
           type="primary"
@@ -214,12 +207,12 @@ const getIdentityTagType = (identity: string): 'success' | 'info' | 'warning' | 
               :key="section.group"
               :title="`${section.group} (${section.participants.length} 人)`"
             >
-              <n-space :size="[8, 8]">
+              <div class="grid grid-cols-2 gap-2">
                 <n-tag
                   v-for="(participant, index) in section.participants"
                   :key="`${section.group}-${participant.name}-${index}`"
-                  :type="getIdentityTagType(participant.identity)"
                   :bordered="false"
+                  size="small"
                 >
                   <n-text
                     depth="3"
@@ -228,8 +221,15 @@ const getIdentityTagType = (identity: string): 'success' | 'info' | 'warning' | 
                     {{ participant.church }}
                   </n-text>
                   {{ participant.name }}
+                  <n-text
+                    v-if="participant.grade"
+                    depth="3"
+                    class="ml-1"
+                  >
+                    {{ participant.grade }}
+                  </n-text>
                 </n-tag>
-              </n-space>
+              </div>
             </n-card>
           </n-space>
         </n-tab-pane>
