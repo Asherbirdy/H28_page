@@ -1,7 +1,5 @@
 <script setup lang='ts'>
-import type { DataTableColumns } from 'naive-ui'
-import { NSpin, NSpace, NCard, NTabs, NTabPane, NDataTable, NTag, NEmpty, NH2, NText } from 'naive-ui'
-import { h } from 'vue'
+import { NSpin, NSpace, NCard, NTabs, NTabPane, NTag, NEmpty, NH2, NText, NButton } from 'naive-ui'
 
 import { fetchChildrenMeetingParticipants } from '@/hook/apis/childrenMeeting'
 import type { ChildrenMeetingParticipant, ChildrenMeetingParticipantsResponse } from '@/types/apis/childrenMeeting'
@@ -19,7 +17,8 @@ const loading = ref(true)
 const rawData = ref<ChildrenMeetingParticipantsResponse>(createEmptyResponse())
 const activeTab = ref('church')
 
-onMounted(async () => {
+const loadData = async () => {
+	loading.value = true
 	try {
 		rawData.value = await fetchChildrenMeetingParticipants()
 	} catch (error) {
@@ -27,7 +26,9 @@ onMounted(async () => {
 	} finally {
 		loading.value = false
 	}
-})
+}
+
+onMounted(loadData)
 
 const participants = computed<ChildrenMeetingParticipant[]>(() => {
 	const result: ChildrenMeetingParticipant[] = []
@@ -112,21 +113,6 @@ const churchTotals = computed(() => {
 	)
 })
 
-const churchColumns: DataTableColumns<ChurchRow> = [
-	{ title: '會所', key: 'church', fixed: 'left', width: 120 },
-	{ title: '家長', key: 'parent', align: 'center' },
-	{ title: '兒童', key: 'child', align: 'center' },
-	{ title: '服事者', key: 'server', align: 'center' },
-	{ title: '青少年隊輔', key: 'youthLeader', align: 'center' },
-	{ title: '大專隊輔', key: 'collegeLeader', align: 'center' },
-	{
-		title: '總計',
-		key: 'total',
-		align: 'center',
-		render: (row) => h('strong', null, row.total)
-	}
-]
-
 const groupOrder = [
 	GroupEnum.第一組,
 	GroupEnum.第二組,
@@ -169,13 +155,30 @@ const getIdentityTagType = (identity: string): 'success' | 'info' | 'warning' | 
 </script>
 
 <template>
-  <n-spin :show="loading">
+  <n-spin
+    :show="loading"
+    description="數據計算約 5~10 秒,請稍候"
+  >
     <n-space
       vertical
       :size="16"
       class="p-6"
     >
-      <n-h2>H28 兒童相調報名統計</n-h2>
+      <n-space
+        justify="space-between"
+        align="center"
+      >
+        <n-h2 class="m-0">
+          H28 兒童相調報名統計
+        </n-h2>
+        <n-button
+          type="primary"
+          :loading="loading"
+          @click="loadData"
+        >
+          重新整理
+        </n-button>
+      </n-space>
 
       <n-empty
         v-if="!loading && participants.length === 0"
@@ -190,22 +193,17 @@ const getIdentityTagType = (identity: string): 'success' | 'info' | 'warning' | 
       >
         <n-tab-pane name="church" tab="各會所數據">
           <n-card>
-            <n-data-table
-              :columns="churchColumns"
-              :data="churchTableData"
-              :bordered="false"
-              :single-line="false"
-              size="small"
-              :summary="() => ({
-                church: { value: '總計', colSpan: 1 },
-                parent: { value: churchTotals.parent },
-                child: { value: churchTotals.child },
-                server: { value: churchTotals.server },
-                youthLeader: { value: churchTotals.youthLeader },
-                collegeLeader: { value: churchTotals.collegeLeader },
-                total: { value: churchTotals.total },
-              })"
-            />
+            <n-space :size="[16, 8]">
+              <n-text
+                v-for="row in churchTableData"
+                :key="row.church"
+              >
+                {{ row.church }}:{{ row.total }} 人
+              </n-text>
+              <n-text strong>
+                總計:{{ churchTotals.total }} 人
+              </n-text>
+            </n-space>
           </n-card>
         </n-tab-pane>
 
