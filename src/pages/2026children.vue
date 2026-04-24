@@ -127,19 +127,35 @@ const groupOrder = [
 	GroupEnum.不分組
 ]
 
+const groupLeader = [
+	'___',
+	'___',
+	'___',
+	'___',
+	'___',
+	'___',
+	'___',
+	'___',
+	'___',
+	'___',
+	'___'
+]
+
 interface GroupSection {
 	group: string
+	leader: string
 	participants: ChildrenMeetingParticipant[]
 }
 
 const groupedData = computed<GroupSection[]>(() => {
 	const sections: GroupSection[] = []
-	for (const group of groupOrder) {
+	for (let i = 0; i < groupOrder.length; i++) {
+		const group = groupOrder[i]
 		const members = participants.value
 			.filter((p) => p.group === group)
 			.sort((a, b) => a.church.localeCompare(b.church) || a.name.localeCompare(b.name))
 		if (members.length > 0) {
-			sections.push({ group, participants: members })
+			sections.push({ group, leader: groupLeader[i] ?? '', participants: members })
 		}
 	}
 	return sections
@@ -184,7 +200,7 @@ const groupedData = computed<GroupSection[]>(() => {
         type="line"
         animated
       >
-        <n-tab-pane name="church" tab="各會所數據">
+        <n-tab-pane name="church" tab="各會所報名">
           <n-card>
             <n-space :size="[16, 8]">
               <n-text
@@ -207,6 +223,13 @@ const groupedData = computed<GroupSection[]>(() => {
               :key="section.group"
               :title="`${section.group} (${section.participants.length} 人)`"
             >
+              <n-text
+                v-if="section.leader"
+                depth="2"
+                class="mb-2 block"
+              >
+                隊輔:{{ section.leader }}
+              </n-text>
               <div class="grid grid-cols-2 gap-2">
                 <n-tag
                   v-for="(participant, index) in section.participants"
