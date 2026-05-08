@@ -11,7 +11,7 @@ import type { GanhuParticipant } from '@/types/apis/ganhu'
 
 // 設定頁面標題
 useHead({
-	title: '12/7 H28港湖集中主日報名 - 28會所',
+	title: 'H28港湖集中主日報名 - 28會所',
 	meta: [
 		{
 			name: 'description',
@@ -211,7 +211,7 @@ onMounted(() => {
     :size="16"
     class="p-6"
   >
-
+    <p style="font-size: large;">6/8 港湖相調特會主日報名</p>
     <!-- 區域過濾 -->
     <n-space align="center">
       <span style="font-weight: 500;">
@@ -226,7 +226,7 @@ onMounted(() => {
         />
       </n-checkbox-group>
     </n-space>
-    <p>12/7 H28港湖集中主日報名</p>
+
     <!-- 統計時間 -->
     <!-- <n-text depth="3" style="font-size: 14px;">
       統計時間: {{ currentTime }}
@@ -265,9 +265,9 @@ onMounted(() => {
           <n-tab-pane name="departure" tab="去程">
             <n-space vertical :size="16">
               <n-card :title="`搭遊覽車去信基大樓 (${getCategoryCount(getDepartureGroups().bus)}人)`">
-                <n-text depth="3" style="margin-top: 8px;">
+                <!-- <n-text depth="3" style="margin-top: 8px;">
                   兩台遊覽車80人還可以坐 {{ 80 - getCategoryCount(getDepartureGroups().bus) }} 人
-                </n-text>
+                </n-text> -->
                 <n-space vertical :size="8">
                   <div v-for="group in getDepartureGroups().bus" :key="group.district">
                     <n-space>
