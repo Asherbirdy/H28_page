@@ -4,8 +4,8 @@
 
 <script setup lang='ts'>
 import { useHead } from '@vueuse/head'
+import { NButton } from 'naive-ui'
 
-// 設定首頁標題
 useHead({
 	title: '28會所 - 首頁',
 	meta: [
@@ -16,12 +16,15 @@ useHead({
 	]
 })
 
-const aaa = ref('aaaa')
-
+function openVideo() {
+	window.open('https://www.youtube.com/watch?v=1ezKjOxflhQ', '_blank')
+}
 </script>
 
 <template>
-  <div>
-    {{ aaa }}
-  </div>
+  <n-space vertical :size="16" class="p-6">
+    <n-button type="primary" @click="openVideo">
+      觀看影片
+    </n-button>
+  </n-space>
 </template>
