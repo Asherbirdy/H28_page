@@ -9,6 +9,8 @@
 
 <template>
     <h1>0621結婚聚會</h1>
-  <img src="/wedding.jpg" alt="Wedding" class="w-full h-auto" />
+  <a href="https://www.youtube.com/watch?v=1ezKjOxflhQ" target="_blank" rel="noopener">
+    <img src="/wedding.jpg" alt="Wedding" class="w-full h-auto" />
+  </a>
 
 </template>
