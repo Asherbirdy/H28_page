@@ -23,11 +23,6 @@ onMounted(async () => {
     apiLoading.value = false
   }
 })
-
-function goToWedding() {
-  if (weddingUrl.value)
-    window.open(weddingUrl.value, '_blank', 'noopener')
-}
 </script>
 
 <template>
@@ -49,13 +44,16 @@ function goToWedding() {
     </a>
 
     <n-button
+      tag="a"
+      :href="weddingUrl || undefined"
+      target="_blank"
+      rel="noopener"
       type="primary"
       size="large"
       round
       strong
       :disabled="!weddingUrl"
       class="!px-8 !h-12 !text-base shadow-lg hover:shadow-xl transition-shadow"
-      @click="goToWedding"
     >
       <template #icon>
         <n-icon>
