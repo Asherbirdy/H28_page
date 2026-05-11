@@ -29,6 +29,26 @@ export const fetchGanhuParticipants = async (): Promise<GanhuParticipantsRespons
   }
 }
 
+export interface WeddingLiveResponse {
+  title: string
+  liveUrl: string
+}
+
+const WEDDING_API_URL = 'https://script.google.com/macros/s/AKfycbw_g8RZJXXhTEC2QNC9nTMlTG7K8FwA4XVhh1W0ZOenhBRqbI9jRoPqzh1ug2gRbi-P/exec'
+
+export const fetchWeddingLive = async (): Promise<WeddingLiveResponse> => {
+  try {
+    const response = await fetch(WEDDING_API_URL)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Failed to fetch wedding live:', error)
+    throw error
+  }
+}
+
 export const fetchMeetingData = async (): Promise<GanghuMeetingResponse[]> => {
   try {
     const response = await fetch(MEETING_DATA_API_URL)
