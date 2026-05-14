@@ -32,6 +32,7 @@ export const fetchGanhuParticipants = async (): Promise<GanhuParticipantsRespons
 export interface WeddingLiveResponse {
   title: string
   liveUrl: string
+  open: '開' | '關'
 }
 
 const WEDDING_API_URL = 'https://script.google.com/macros/s/AKfycbw_g8RZJXXhTEC2QNC9nTMlTG7K8FwA4XVhh1W0ZOenhBRqbI9jRoPqzh1ug2gRbi-P/exec'

@@ -8,8 +8,11 @@
 import { NButton, NSpin } from 'naive-ui'
 import { fetchWeddingLive } from '@/hook/apis/ganhu'
 
+const dialog = useDialog()
+
 const title = ref('')
 const weddingUrl = ref('')
+const isOpen = ref(false)
 const apiLoading = ref(true)
 const imageLoaded = ref(false)
 const loading = computed(() => apiLoading.value || !imageLoaded.value)
@@ -24,10 +27,22 @@ onMounted(async () => {
     const data = await fetchWeddingLive()
     title.value = data.title
     weddingUrl.value = data.liveUrl
+    isOpen.value = data.open === '開'
   } finally {
     apiLoading.value = false
   }
 })
+
+const handleLiveClick = (e: Event) => {
+  if (!isOpen.value) {
+    e.preventDefault()
+    dialog.warning({
+      title: '直播尚未開始',
+      content: '直播尚未開始，敬請期待。',
+      positiveText: '確定',
+    })
+  }
+}
 </script>
 
 <template>
@@ -119,10 +134,11 @@ onMounted(async () => {
 
       <!-- Framed photograph -->
       <a
-        :href="weddingUrl"
-        target="_blank"
+        :href="isOpen ? weddingUrl : undefined"
+        :target="isOpen ? '_blank' : undefined"
         rel="noopener"
-        class="block relative group opacity-0"
+        class="block relative group opacity-0 cursor-pointer"
+        @click="handleLiveClick"
         :style="{
           width: 'min(440px, 78vw)',
           maxHeight: '46vh',
@@ -169,11 +185,12 @@ onMounted(async () => {
       >
         <n-button
           tag="a"
-          :href="weddingUrl || undefined"
-          target="_blank"
+          :href="isOpen ? (weddingUrl || undefined) : undefined"
+          :target="isOpen ? '_blank' : undefined"
           rel="noopener"
           :disabled="!weddingUrl"
           size="large"
+          @click="handleLiveClick"
           class="wedding-cta"
           :style="{
             '--n-color': '#6B2737',
@@ -199,7 +216,7 @@ onMounted(async () => {
             transition: 'all 0.5s ease',
           }"
         >
-          觀看 結婚 直播
+          點擊進入直播
         </n-button>
       </div>
 
