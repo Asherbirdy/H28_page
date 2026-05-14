@@ -221,7 +221,7 @@ const handleLiveClick = (e: Event) => {
       </div>
 
       <!-- Footer mark (hidden on mobile to keep above-the-fold) -->
-      <div
+      <!-- <div
         class="hidden md:flex mt-16 flex-col items-center gap-3 opacity-0"
         style="animation: weddingFadeUp 1.2s ease-out 0.95s forwards"
       >
@@ -232,7 +232,7 @@ const handleLiveClick = (e: Event) => {
         >
           MMXXVI · est. love
         </span>
-      </div>
+      </div> -->
     </main>
   </div>
 </template>
