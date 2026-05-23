@@ -59,7 +59,7 @@ const getDistrictDisplay = (districtName: string) => {
 }
 
 const getParticipantLabel = (participant: GanhuParticipant) => {
-	if (participant.identity === '兒童(國小以上)' || participant.identity === '兒童(國小以下)') {
+	if (participant.identity === '12歲以下') {
 		return `${participant.name} (兒)`
 	}
 	return participant.name
@@ -146,9 +146,7 @@ const getStatistics = computed(() => {
 	)
 
 	const totalParticipants = validParticipants.length
-	const childrenUpper = validParticipants.filter(p => p.identity === '兒童(國小以上)').length
-	const childrenLower = validParticipants.filter(p => p.identity === '兒童(國小以下)').length
-	const children = childrenUpper + childrenLower
+	const children = validParticipants.filter(p => p.identity === '12歲以下').length
 	const adults = totalParticipants - children
 
 	// 統計福新朋友、男介、女介 - 取得名字列表
@@ -160,8 +158,6 @@ const getStatistics = computed(() => {
 		total: totalParticipants,
 		adults,
 		children,
-		childrenUpper,
-		childrenLower,
 		fuxinFriendsList,
 		maleIntroList,
 		femaleIntroList
@@ -186,9 +182,7 @@ const getDistrictStatistics = computed(() => {
 	const districts = ['一區', '二區', '三區', '四區']
 	return districts.map(district => {
 		const districtParticipants = validParticipants.filter(p => p.districtName === district)
-		const children = districtParticipants.filter(p =>
-			p.identity === '兒童(國小以上)' || p.identity === '兒童(國小以下)'
-		).length
+		const children = districtParticipants.filter(p => p.identity === '12歲以下').length
 		return {
 			name: district,
 			count: districtParticipants.length,
@@ -211,7 +205,7 @@ onMounted(() => {
     :size="16"
     class="p-6"
   >
-    <p style="font-size: large;">6/8 港湖相調特會主日報名</p>
+    <p style="font-size: large;">6/7 港湖相調特會主日報名</p>
     <!-- 區域過濾 -->
     <n-space align="center">
       <span style="font-weight: 500;">
@@ -320,7 +314,7 @@ onMounted(() => {
           <!-- 下午程 Tab -->
           <n-tab-pane name="afternoon" tab="下午程">
             <n-space vertical :size="16">
-              <n-card :title="`參加相調(搭遊覽車) (${getCategoryCount(getAfternoonGroups().bus)}人)`">
+              <n-card :title="`參加吃飯相調(搭遊覽車) (${getCategoryCount(getAfternoonGroups().bus)}人)`">
                 <n-space vertical :size="8">
                   <div v-for="group in getAfternoonGroups().bus" :key="group.district">
                     <n-space>
@@ -378,10 +372,7 @@ onMounted(() => {
                   參加: {{ getStatistics.adults }} 位
                 </n-text>
                 <n-text>
-                  國小以上兒童：{{ getStatistics.childrenUpper }} 位
-                </n-text>
-                <n-text>
-                  國小以下兒童：{{ getStatistics.childrenLower }} 位
+                  兒童 (12歲以下)：{{ getStatistics.children }} 位
                 </n-text>
                 <n-text style="font-size: 16px; font-weight: 500;">
                   總計: {{ getStatistics.total }} 位
