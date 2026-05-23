@@ -153,23 +153,19 @@ const totalDiningCount = computed(() => {
 })
 
 const getParticipantCounts = (participants: GanhuParticipant[]) => {
-	const elementaryAbove = participants.filter(p => p.identity === '兒童(國小以上)').length
-	const elementaryBelow = participants.filter(p => p.identity === '兒童(國小以下)').length
-	const preschool = participants.filter(p => p.identity === '0-3歲').length
-	const childCount = elementaryAbove + elementaryBelow + preschool
+	const childCount = participants.filter(p => p.identity === '12歲以下').length
 	const adultCount = participants.length - childCount
 	return {
 		adultCount,
-		childCount,
-		elementaryAbove,
-		elementaryBelow,
-		preschool
+		childCount
 	}
 }
 
 const getBusLeader = (busName: string) => {
-	if (busName.includes('一車')) return '車長：人溢、劍弘(配搭)'
-	if (busName.includes('二車')) return '車長：耀哲、仰恩(配搭)'
+	// if (busName.includes('一車')) return '車長：人溢、劍弘(配搭)'
+	// if (busName.includes('二車')) return '車長：耀哲、仰恩(配搭)'
+	if (busName.includes('一車')) return ''
+	if (busName.includes('二車')) return ''
 	return ''
 }
 
@@ -256,9 +252,7 @@ onMounted(() => {
                 >
                   <span
                     :class="{
-                      'highlight-child': participant.identity === '兒童(國小以上)'
-                        || participant.identity === '兒童(國小以下)'
-                        || participant.identity === '0-3歲'
+                      'highlight-child': participant.identity === '12歲以下'
                     }"
                   >{{ participant.name }}</span>
                   <span v-if="index < group.participants.length - 1">
@@ -312,9 +306,7 @@ onMounted(() => {
                 >
                   <span
                     :class="{
-                      'highlight-child': participant.identity === '兒童(國小以上)'
-                        || participant.identity === '兒童(國小以下)'
-                        || participant.identity === '0-3歲'
+                      'highlight-child': participant.identity === '12歲以下'
                     }"
                   >{{ participant.name }}</span>
                   <span v-if="index < group.participants.length - 1">
@@ -359,7 +351,7 @@ onMounted(() => {
                     v-if="getParticipantCounts(group.participants).childCount > 0"
                     class="child-detail"
                   >
-                    兒童國小以上:{{ getParticipantCounts(group.participants).elementaryAbove }} 兒童國小以下:{{ getParticipantCounts(group.participants).elementaryBelow }} 學齡前:{{ getParticipantCounts(group.participants).preschool }}
+                    兒童(12歲以下):{{ getParticipantCounts(group.participants).childCount }}
                   </div>
                 </div>
               </template>
@@ -370,9 +362,7 @@ onMounted(() => {
                 >
                   <span
                     :class="{
-                      'highlight-child': participant.identity === '兒童(國小以上)'
-                        || participant.identity === '兒童(國小以下)'
-                        || participant.identity === '0-3歲'
+                      'highlight-child': participant.identity === '12歲以下'
                     }"
                   >{{ participant.name }}</span>
                   <span v-if="index < group.participants.length - 1">
@@ -384,11 +374,11 @@ onMounted(() => {
           </n-space>
         </n-spin>
       </div>
-      <img
+      <!-- <img
         src="/public/20251207會前通知.jpg"
         alt=""
         style="width: 100%;"
-      >
+      > -->
     </n-space>
 
     <!-- 返回頂部按鈕 -->
