@@ -252,9 +252,10 @@ onMounted(() => {
                 >
                   <span
                     :class="{
-                      'highlight-child': participant.identity === '12歲以下'
+                      'highlight-child': participant.identity === '12歲以下',
+                      'highlight-friend': participant.identity === '男介朋友' || participant.identity === '女介朋友'
                     }"
-                  >{{ participant.name }}</span>
+                  >{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
                   <span v-if="index < group.participants.length - 1">
                     、
                   </span>
@@ -306,9 +307,10 @@ onMounted(() => {
                 >
                   <span
                     :class="{
-                      'highlight-child': participant.identity === '12歲以下'
+                      'highlight-child': participant.identity === '12歲以下',
+                      'highlight-friend': participant.identity === '男介朋友' || participant.identity === '女介朋友'
                     }"
-                  >{{ participant.name }}</span>
+                  >{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
                   <span v-if="index < group.participants.length - 1">
                     、
                   </span>
@@ -347,12 +349,12 @@ onMounted(() => {
               <template #header>
                 <div>
                   <div>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</div>
-                  <div
+                  <!-- <div
                     v-if="getParticipantCounts(group.participants).childCount > 0"
                     class="child-detail"
                   >
                     兒童(12歲以下):{{ getParticipantCounts(group.participants).childCount }}
-                  </div>
+                  </div> -->
                 </div>
               </template>
               <n-text>
@@ -362,9 +364,10 @@ onMounted(() => {
                 >
                   <span
                     :class="{
-                      'highlight-child': participant.identity === '12歲以下'
+                      'highlight-child': participant.identity === '12歲以下',
+                      'highlight-friend': participant.identity === '男介朋友' || participant.identity === '女介朋友'
                     }"
-                  >{{ participant.name }}</span>
+                  >{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
                   <span v-if="index < group.participants.length - 1">
                     、
                   </span>
@@ -393,6 +396,14 @@ onMounted(() => {
   border-radius: 4px;
   font-weight: 500;
   color: green
+}
+
+.highlight-friend {
+  background-color: #FFA500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #fff;
 }
 
 .child-detail {
