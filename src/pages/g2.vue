@@ -25,6 +25,24 @@ const loading = ref(false)
 const participants = ref<GanhuParticipant[]>([])
 const errorMessage = ref('')
 
+// 中文數字映射
+const chineseNumMap: Record<string, number> = {
+	'一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10
+}
+
+// 提取車次/桌次數字（支援中文與阿拉伯數字）
+const extractNumber = (str: string): number => {
+	// 先嘗試匹配中文數字
+	for (const [chinese, num] of Object.entries(chineseNumMap)) {
+		if (str.includes(chinese)) {
+			return num
+		}
+	}
+	// 如果沒有中文數字，嘗試匹配阿拉伯數字
+	const match = str.match(/(\d+)/)
+	return match ? parseInt(match[0]) : 0
+}
+
 const busGroups = computed(() => {
 	// 確保 participants 是陣列
 	if (!Array.isArray(participants.value)) {
@@ -52,9 +70,7 @@ const busGroups = computed(() => {
 		}))
 		.sort((a, b) => {
 			// 按照車次排序：一車、二車、三車...
-			const aNum = a.busName.match(/(\d+)/)?.[0] || '0'
-			const bNum = b.busName.match(/(\d+)/)?.[0] || '0'
-			return parseInt(aNum) - parseInt(bNum)
+			return extractNumber(a.busName) - extractNumber(b.busName)
 		})
 
 	return result
@@ -87,9 +103,7 @@ const busBlendGroups = computed(() => {
 		}))
 		.sort((a, b) => {
 			// 按照車次排序：一車、二車、三車...
-			const aNum = a.busName.match(/(\d+)/)?.[0] || '0'
-			const bNum = b.busName.match(/(\d+)/)?.[0] || '0'
-			return parseInt(aNum) - parseInt(bNum)
+			return extractNumber(a.busName) - extractNumber(b.busName)
 		})
 
 	return result
@@ -113,24 +127,6 @@ const tableGroups = computed(() => {
 			groups.get(p.table)!.push(p)
 		}
 	})
-
-	// 中文數字映射
-	const chineseNumMap: Record<string, number> = {
-		'一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10
-	}
-
-	// 提取數字的函數
-	const extractNumber = (str: string): number => {
-		// 先嘗試匹配中文數字
-		for (const [chinese, num] of Object.entries(chineseNumMap)) {
-			if (str.includes(chinese)) {
-				return num
-			}
-		}
-		// 如果沒有中文數字，嘗試匹配阿拉伯數字
-		const match = str.match(/(\d+)/)
-		return match ? parseInt(match[0]) : 0
-	}
 
 	// 轉換為陣列並排序
 	const result: BusGroup[] = Array.from(groups.entries())
@@ -214,7 +210,7 @@ onMounted(() => {
       <!-- 去程車次 -->
       <div>
         <n-space justify="center">
-          <n-h2>搭遊覽車[東湖->信基]</n-h2>
+          <n-h2>去程[東湖->信基]</n-h2>
         </n-space>
 
         <n-spin :show="loading">
@@ -238,7 +234,14 @@ onMounted(() => {
             >
               <template #header>
                 <div class="bus-header">
-                  <span>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</span>
+                  <span>
+                    {{ group.busName }} 共<span
+                      :class="{ 'bus-overload': getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount > 42 }"
+                    >{{ getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount }}</span>人<span
+                      v-if="getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount > 42"
+                      class="bus-overload"
+                    > 超載 {{ getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount - 42 }} 位</span>
+                  </span>
                   <span
                     v-if="getBusLeader(group.busName)"
                     class="bus-leader"
@@ -269,7 +272,7 @@ onMounted(() => {
       <!-- 回程相調車次 -->
       <div>
         <n-space justify="center">
-          <n-h2>搭遊覽車[信基->餐廳]</n-h2>
+          <n-h2>去餐廳[信基->餐廳]</n-h2>
         </n-space>
 
         <n-spin :show="loading">
@@ -293,7 +296,14 @@ onMounted(() => {
             >
               <template #header>
                 <div class="bus-header">
-                  <span>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</span>
+                  <span>
+                    {{ group.busName }} 共<span
+                      :class="{ 'bus-overload': getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount > 42 }"
+                    >{{ getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount }}</span>人<span
+                      v-if="getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount > 42"
+                      class="bus-overload"
+                    > 超載 {{ getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount - 42 }} 位</span>
+                  </span>
                   <span
                     v-if="getBusLeader(group.busName)"
                     class="bus-leader"
@@ -348,7 +358,7 @@ onMounted(() => {
             >
               <template #header>
                 <div>
-                  <div>{{ group.busName }} {{ getParticipantCounts(group.participants).adultCount }}人{{ getParticipantCounts(group.participants).childCount > 0 ? ` ${getParticipantCounts(group.participants).childCount}兒童` : '' }}</div>
+                  <div>{{ group.busName }} 共{{ getParticipantCounts(group.participants).adultCount + getParticipantCounts(group.participants).childCount }}人</div>
                   <!-- <div
                     v-if="getParticipantCounts(group.participants).childCount > 0"
                     class="child-detail"
@@ -424,5 +434,10 @@ onMounted(() => {
   font-size: 0.9rem;
   color: #666;
   font-weight: normal;
+}
+
+.bus-overload {
+  color: #d03050;
+  font-weight: 700;
 }
 </style>
