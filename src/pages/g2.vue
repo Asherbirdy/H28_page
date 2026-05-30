@@ -7,13 +7,13 @@ import type { GanhuParticipant } from '@/types/apis/ganhu'
 
 // 設定頁面標題和 meta
 useHead({
-	title: '12/7港湖集中 行前確認表',
-	meta: [
-		{
-			name: 'description',
-			content: '28會所 12月7日港湖集中主日行前確認表，包含遊覽車安排與餐桌座位'
-		}
-	]
+	title: '6/7港湖集中',
+	// meta: [
+	// 	{
+	// 		name: 'description',
+	// 		content: '28會所 12月7日港湖集中主日行前確認表，包含遊覽車安排與餐桌座位'
+	// 	}
+	// ]
 })
 
 interface BusGroup {
