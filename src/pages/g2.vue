@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { useHead } from '@vueuse/head'
-import { NSpace, NCard, NText, NSpin, NEmpty, NH2, NBackTop, NTabs, NTabPane } from 'naive-ui'
+import { NSpace, NCard, NText, NSpin, NEmpty, NH2, NBackTop, NTabs, NTabPane, NTag } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -26,7 +26,7 @@ const participants = ref<GanhuParticipant[]>([])
 const errorMessage = ref('')
 
 // Tab 狀態
-const activeTab = ref('bus')
+const activeTab = ref('departure')
 
 // 中文數字映射
 const chineseNumMap: Record<string, number> = {
@@ -43,7 +43,8 @@ const extractNumber = (str: string): number => {
 	}
 	// 如果沒有中文數字，嘗試匹配阿拉伯數字
 	const match = str.match(/(\d+)/)
-	return match ? parseInt(match[0]) : 0
+	// 沒有任何數字的車次排到最後，確保一車、二車在最上面
+	return match ? parseInt(match[0]) : Number.MAX_SAFE_INTEGER
 }
 
 const busGroups = computed(() => {
@@ -151,6 +152,34 @@ const totalDiningCount = computed(() => {
 	return tableGroups.value.reduce((total, group) => total + group.participants.length, 0)
 })
 
+// 區域排序
+const districtOrder = ['一區', '二區', '三區', '四區']
+
+// 將同一車次的名單再依區別分組
+const groupByDistrict = (list: GanhuParticipant[]) => {
+	const groups: { district: string, participants: GanhuParticipant[] }[] = []
+
+	// 先依固定區別順序
+	for (const district of districtOrder) {
+		const ps = list.filter(p => p.districtName === district)
+		if (ps.length > 0) {
+			groups.push({ district, participants: ps })
+		}
+	}
+
+	// 其餘未列在順序內的區別
+	const others = new Map<string, GanhuParticipant[]>()
+	list.forEach(p => {
+		if (!districtOrder.includes(p.districtName)) {
+			if (!others.has(p.districtName)) others.set(p.districtName, [])
+			others.get(p.districtName)!.push(p)
+		}
+	})
+	others.forEach((participants, district) => groups.push({ district, participants }))
+
+	return groups
+}
+
 const getParticipantCounts = (participants: GanhuParticipant[]) => {
 	const childCount = participants.filter(p => p.identity === '12歲以下').length
 	const adultCount = participants.length - childCount
@@ -212,8 +241,8 @@ onMounted(() => {
       animated
       size="large"
     >
-      <!-- 遊覽車 Tab -->
-      <n-tab-pane name="bus" tab="遊覽車">
+      <!-- 去程 Tab -->
+      <n-tab-pane name="departure" tab="去程[東湖出發]">
         <n-space
           vertical
           :size="32"
@@ -259,28 +288,40 @@ onMounted(() => {
                   >{{ getBusLeader(group.busName) }}</span>
                 </div>
               </template>
-              <n-text>
-                <template
-                  v-for="(participant, index) in group.participants"
-                  :key="participant.name"
+              <n-space vertical :size="6">
+                <div
+                  v-for="districtGroup in groupByDistrict(group.participants)"
+                  :key="districtGroup.district"
+                  class="district-row"
                 >
-                  <span
-                    :class="{
-                      'highlight-child': participant.identity === '12歲以下',
-                      'highlight-friend': participant.identity === '男介朋友' || participant.identity === '女介朋友'
-                    }"
-                  >{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
-                  <span v-if="index < group.participants.length - 1">
-                    、
-                  </span>
-                </template>
-              </n-text>
+                  <n-tag size="small" :bordered="false" type="info" class="district-label">
+                    {{ districtGroup.district }}
+                  </n-tag>
+                  <n-text>
+                    <template
+                      v-for="(participant, index) in districtGroup.participants"
+                      :key="participant.name"
+                    >
+                      <span>{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
+                      <span v-if="index < districtGroup.participants.length - 1">、</span>
+                    </template>
+                  </n-text>
+                </div>
+              </n-space>
             </n-card>
           </n-space>
         </n-spin>
       </div>
+        </n-space>
+      </n-tab-pane>
 
-      <!-- 回程相調車次 -->
+      <!-- 去餐廳 Tab -->
+      <n-tab-pane name="blend" tab="相調[信基出發]">
+        <n-space
+          vertical
+          :size="32"
+        >
+          <!-- 回程相調車次 -->
       <div>
         <n-space justify="center">
           <n-h2>去餐廳[信基->餐廳]</n-h2>
@@ -321,22 +362,26 @@ onMounted(() => {
                   >{{ getBusLeader(group.busName) }}</span>
                 </div>
               </template>
-              <n-text>
-                <template
-                  v-for="(participant, index) in group.participants"
-                  :key="participant.name"
+              <n-space vertical :size="6">
+                <div
+                  v-for="districtGroup in groupByDistrict(group.participants)"
+                  :key="districtGroup.district"
+                  class="district-row"
                 >
-                  <span
-                    :class="{
-                      'highlight-child': participant.identity === '12歲以下',
-                      'highlight-friend': participant.identity === '男介朋友' || participant.identity === '女介朋友'
-                    }"
-                  >{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
-                  <span v-if="index < group.participants.length - 1">
-                    、
-                  </span>
-                </template>
-              </n-text>
+                  <n-tag size="small" :bordered="false" type="info" class="district-label">
+                    {{ districtGroup.district }}
+                  </n-tag>
+                  <n-text>
+                    <template
+                      v-for="(participant, index) in districtGroup.participants"
+                      :key="participant.name"
+                    >
+                      <span>{{ participant.name }}{{ participant.identity === '男介朋友' || participant.identity === '女介朋友' ? '(福)' : '' }}</span>
+                      <span v-if="index < districtGroup.participants.length - 1">、</span>
+                    </template>
+                  </n-text>
+                </div>
+              </n-space>
             </n-card>
           </n-space>
         </n-spin>
@@ -455,5 +500,16 @@ onMounted(() => {
 .bus-overload {
   color: #d03050;
   font-weight: 700;
+}
+
+.district-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.district-label {
+  flex-shrink: 0;
+  align-self: flex-start;
 }
 </style>
