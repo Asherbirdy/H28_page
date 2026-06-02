@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { useHead } from '@vueuse/head'
-import { NSpace, NCard, NText, NSpin, NEmpty, NH2, NBackTop, NTabs, NTabPane, NTag } from 'naive-ui'
+import { NSpace, NCard, NText, NSpin, NEmpty, NH2, NBackTop, NTabs, NTabPane, NTag, NFloatButton, NModal, NSelect, NResult } from 'naive-ui'
 
 import { fetchGanhuParticipants } from '@/hook/apis/ganhu'
 import type { GanhuParticipant } from '@/types/apis/ganhu'
@@ -231,6 +231,30 @@ const loadData = async () => {
 onMounted(() => {
 	loadData()
 })
+
+// ===== 個人查詢（右下角浮動按鈕） =====
+const showMyInfo = ref(false)
+const selectedIndex = ref<number | null>(null)
+
+// 以 index 當 value，避免同名衝突
+const nameOptions = computed(() => {
+	if (!Array.isArray(participants.value)) return []
+	return participants.value.map((p, index) => ({
+		label: p.districtName ? `${p.name}（${p.districtName}）` : p.name,
+		value: index
+	}))
+})
+
+const myInfo = computed(() => {
+	if (selectedIndex.value === null) return null
+	return participants.value[selectedIndex.value] ?? null
+})
+
+const isEmptyValue = (val?: string) => !val || val === '無' || val === '無需搭車' || val === '無用餐'
+
+const openMyInfo = () => {
+	showMyInfo.value = true
+}
 </script>
 
 <template>
@@ -457,6 +481,80 @@ onMounted(() => {
 
     <!-- 返回頂部按鈕 -->
     <n-back-top :right="40" :bottom="80" />
+
+    <!-- 右下角浮動按鈕：查詢個人車次/桌次 -->
+    <n-float-button
+      :right="40"
+      :bottom="160"
+      type="primary"
+      :width="68"
+      :height="68"
+      shape="circle"
+      @click="openMyInfo"
+    >
+      <span class="float-btn-text">查我的<br>位置在哪</span>
+    </n-float-button>
+
+    <!-- 個人資訊視窗 -->
+    <n-modal
+      v-model:show="showMyInfo"
+      preset="card"
+      title="查詢我的車次與桌次"
+      :style="{ maxWidth: '420px', width: '90%' }"
+      :bordered="false"
+    >
+      <n-space vertical :size="16">
+        <n-select
+          v-model:value="selectedIndex"
+          :options="nameOptions"
+          placeholder="請輸入或選擇你的名字"
+          filterable
+          clearable
+          size="large"
+        />
+
+        <n-card v-if="myInfo" size="small" :bordered="true">
+          <n-space vertical :size="14">
+            <div class="info-name">
+              {{ myInfo.name }}
+              <span v-if="myInfo.districtName" class="info-district">{{ myInfo.districtName }}</span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">去程車</span>
+              <n-tag v-if="!isEmptyValue(myInfo.busGo)" type="success" :bordered="false" size="large">
+                {{ myInfo.busGo }}
+              </n-tag>
+              <n-text v-else depth="3">無需搭車</n-text>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">相調車</span>
+              <n-tag v-if="!isEmptyValue(myInfo.busBlend)" type="info" :bordered="false" size="large">
+                {{ myInfo.busBlend }}
+              </n-tag>
+              <n-text v-else depth="3">無需搭車</n-text>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">桌次</span>
+              <n-tag v-if="!isEmptyValue(myInfo.table)" type="warning" :bordered="false" size="large">
+                {{ myInfo.table }}
+              </n-tag>
+              <n-text v-else depth="3">無用餐</n-text>
+            </div>
+          </n-space>
+        </n-card>
+
+        <n-result
+          v-else
+          status="info"
+          title="請選擇你的名字"
+          description="選擇後會顯示你的車次與桌次"
+          size="small"
+        />
+      </n-space>
+    </n-modal>
   </div>
 </template>
 
@@ -511,5 +609,39 @@ onMounted(() => {
 .district-label {
   flex-shrink: 0;
   align-self: flex-start;
+}
+
+.info-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-district {
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: #666;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-label {
+  width: 56px;
+  flex-shrink: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.float-btn-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
 }
 </style>
