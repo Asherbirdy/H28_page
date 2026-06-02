@@ -266,7 +266,7 @@ const openMyInfo = () => {
       size="large"
     >
       <!-- 去程 Tab -->
-      <n-tab-pane name="departure" tab="去程[東湖出發]">
+      <n-tab-pane name="departure" tab="出發">
         <n-space
           vertical
           :size="32"
@@ -340,7 +340,7 @@ const openMyInfo = () => {
       </n-tab-pane>
 
       <!-- 去餐廳 Tab -->
-      <n-tab-pane name="blend" tab="相調[信基出發]">
+      <n-tab-pane name="blend" tab="去相調">
         <n-space
           vertical
           :size="32"
@@ -414,7 +414,7 @@ const openMyInfo = () => {
       </n-tab-pane>
 
       <!-- 桌次名單 Tab -->
-      <n-tab-pane name="table" tab="桌次名單">
+      <n-tab-pane name="table" tab="桌位">
         <n-space
           vertical
           :size="32"
